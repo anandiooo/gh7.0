@@ -13,11 +13,10 @@ from src.ui.components import (
     sync_language,
 )
 from src.ui.messages import user_safe_error_message
+from src.ui.styles import render_global_styles
 from src.ui.theme import (
-    ACCENT_WARNING_ORANGE,
     PRIMARY_DARK_GREEN,
     PRIMARY_TEXT,
-    SECONDARY_LIGHT_GREEN,
     SURFACE_BACKGROUND,
 )
 
@@ -30,6 +29,7 @@ st.set_page_config(
 if "lang" not in st.session_state:
     st.session_state["lang"] = "id"
 sync_language()
+render_global_styles()
 logger = logging.getLogger(__name__)
 
 
@@ -77,60 +77,76 @@ def _render_welcome() -> None:
         """,
         unsafe_allow_html=True,
     )
-    _left, center, _right = st.columns([1, 2, 1])
-    with center:
+    hero_copy, hero_image = st.columns([1.02, 1], gap="large", vertical_alignment="center")
+    with hero_copy:
         st.markdown(
-            f'<div style="text-align: center; padding: 2rem 0;">'
-            f'<h1 style="color: {PRIMARY_DARK_GREEN}; font-size: 2.5rem;">{t("app.title")}</h1>'
-            f'<p style="color: {SECONDARY_LIGHT_GREEN}; font-size: 1.15rem; margin-top: -0.5rem;">'
-            f"{t('app.tagline')}</p></div>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f'<p style="text-align: center; color: {PRIMARY_TEXT};">{t("welcome.description")}</p>',
+            '<div class="mt-hero-copy">'
+            f'<div class="mt-eyebrow">{t("welcome.eyebrow")}</div>'
+            f"<h1>{t('app.title')}</h1>"
+            f'<p class="mt-lead">{t("app.tagline")} {t("welcome.description")}</p>'
+            "</div>",
             unsafe_allow_html=True,
         )
         render_prototype_banner()
-        st.divider()
-        col_demo, col_empty = st.columns(2)
-        with col_demo:
-            st.markdown(
-                f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
-                f"border-radius: 8px; border: 2px solid {SECONDARY_LIGHT_GREEN}; "
-                f'text-align: center; min-height: 140px;">'
-                f'<h3 style="color: {PRIMARY_DARK_GREEN};">{t("welcome.load_demo")}</h3>'
-                f'<p style="color: {PRIMARY_TEXT}; font-size: 0.9rem;">'
-                f"{t('welcome.load_demo_desc')}</p></div>",
-                unsafe_allow_html=True,
-            )
-            if st.button(
-                t("welcome.load_demo"),
-                key="btn_load_demo",
-                type="primary",
-                width="stretch",
-                icon="📦",
-            ):
-                _run_initialization(WorkspaceMode.DEMO)
-        with col_empty:
-            st.markdown(
-                f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
-                f"border-radius: 8px; border: 2px solid {ACCENT_WARNING_ORANGE}; "
-                f'text-align: center; min-height: 140px;">'
-                f'<h3 style="color: {PRIMARY_DARK_GREEN};">{t("welcome.start_empty")}</h3>'
-                f'<p style="color: {PRIMARY_TEXT}; font-size: 0.9rem;">'
-                f"{t('welcome.start_empty_desc')}</p></div>",
-                unsafe_allow_html=True,
-            )
-            if st.button(
-                t("welcome.start_empty"),
-                key="btn_start_empty",
-                width="stretch",
-                icon="📝",
-            ):
-                _run_initialization(WorkspaceMode.EMPTY)
-        st.divider()
-        st.caption(f"{t('welcome.disclaimer')}")
-        st.markdown("")
+        st.markdown(
+            f'<span class="mt-pill">✓ {t("welcome.local_first")}</span>',
+            unsafe_allow_html=True,
+        )
+    with hero_image:
+        st.markdown('<div class="mt-hero-image">', unsafe_allow_html=True)
+        st.image(
+            "assets/mimpitani-hero.webp",
+            width="stretch",
+            caption=t("welcome.hero_caption"),
+        )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown(
+        f'<div class="mt-section-label">{t("welcome.choose_workspace")}</div>',
+        unsafe_allow_html=True,
+    )
+    col_demo, col_empty = st.columns(2, gap="medium")
+    with col_demo:
+        st.markdown(
+            f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
+            f"border-radius: 16px; border: 1px solid rgba(56,142,60,.22); "
+            f'box-shadow: 0 12px 30px rgba(20,83,25,.06); min-height: 150px;">'
+            f'<span class="mt-pill">{t("welcome.recommended")}</span>'
+            f'<h3 style="color: {PRIMARY_DARK_GREEN};">📦 {t("welcome.load_demo")}</h3>'
+            f'<p style="color: {PRIMARY_TEXT}; font-size: 0.92rem;">'
+            f"{t('welcome.load_demo_desc')}</p></div>",
+            unsafe_allow_html=True,
+        )
+        if st.button(
+            t("welcome.load_demo"),
+            key="btn_load_demo",
+            type="primary",
+            width="stretch",
+            icon="📦",
+        ):
+            _run_initialization(WorkspaceMode.DEMO)
+    with col_empty:
+        st.markdown(
+            f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
+            f"border-radius: 16px; border: 1px solid rgba(217,119,6,.22); "
+            f'box-shadow: 0 12px 30px rgba(20,83,25,.06); min-height: 150px;">'
+            f'<span class="mt-pill">{t("welcome.blank_canvas")}</span>'
+            f'<h3 style="color: {PRIMARY_DARK_GREEN};">📝 {t("welcome.start_empty")}</h3>'
+            f'<p style="color: {PRIMARY_TEXT}; font-size: 0.92rem;">'
+            f"{t('welcome.start_empty_desc')}</p></div>",
+            unsafe_allow_html=True,
+        )
+        if st.button(
+            t("welcome.start_empty"),
+            key="btn_start_empty",
+            width="stretch",
+            icon="📝",
+        ):
+            _run_initialization(WorkspaceMode.EMPTY)
+    st.divider()
+    footer_copy, footer_lang = st.columns([4, 1])
+    footer_copy.caption(t("welcome.disclaimer"))
+    with footer_lang:
         render_language_switcher()
 
 

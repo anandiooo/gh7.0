@@ -20,6 +20,7 @@ from src.ui.components import (
     active_database_path,
     is_workspace_initialized,
     render_header,
+    render_page_intro,
     render_prototype_banner,
     render_workspace_required,
     sync_language,
@@ -198,8 +199,12 @@ def render_scenario_comparison(base: AnalysisOutcome, scenario: ScenarioResult) 
 
 render_header()
 render_prototype_banner()
-st.subheader(t("nav.analysis_simulation"))
-st.caption(t("analysis.provenance"))
+render_page_intro(
+    icon="📊",
+    title=t("nav.analysis_simulation"),
+    description=t("analysis.provenance"),
+    eyebrow=t("analysis.eyebrow"),
+)
 if notice := st.session_state.pop("analysis_notice", None):
     st.success(t(notice), icon="✅")
 

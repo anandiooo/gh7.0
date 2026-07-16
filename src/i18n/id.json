@@ -13,7 +13,13 @@
   },
   "welcome": {
     "heading": "Selamat Datang di MimpiTani",
+    "eyebrow": "Inteligensi koperasi untuk panen komoditas segar",
     "description": "Sistem peringatan dini dan pendukung keputusan untuk koperasi petani cabai.",
+    "local_first": "Lokal · deterministik · advisory",
+    "hero_caption": "Ilustrasi lanskap pilot cabai rawit merah di Kabupaten Magelang.",
+    "choose_workspace": "Pilih cara memulai",
+    "recommended": "Demo rekomendasi",
+    "blank_canvas": "Workspace bersih",
     "load_demo": "Muat Data Demo",
     "start_empty": "Mulai Kosong",
     "load_demo_desc": "Muat data simulasi deterministik untuk Koperasi Tani Merapi Sejahtera.",
@@ -82,6 +88,7 @@
     }
   },
   "radar": {
+    "eyebrow": "Proyeksi operasional tujuh hari",
     "provenance": "Data operasional simulasi · estimasi tujuh hari bersifat advisory.",
     "horizon_start": "Awal horizon tujuh hari",
     "weather_continues": "Analisis berlanjut dengan kontribusi gangguan cuaca nol saat cuaca tidak tersedia.",
@@ -90,16 +97,21 @@
     "potential_surplus": "Estimasi surplus potensial",
     "operational_surplus": "Estimasi surplus terkendala operasional",
     "chart_title": "Pasokan, permintaan kompatibel, dan kapasitas harian",
+    "chart_subtitle": "Lihat kapan tekanan panen melampaui penyerapan pasar dan kapasitas distribusi.",
     "quantity_kg": "Kuantitas (kg)",
     "series": "Seri",
     "risk_score": "Skor risiko surplus",
     "critical_date": "Tanggal kritis",
+    "pilot_map_title": "Lokasi pilot",
+    "pilot_map_caption": "Perkiraan area pilot koperasi · tanpa koordinat kebun pribadi.",
+    "decision_pulse": "Ringkasan keputusan",
     "top_factors": "Mengapa risiko meningkat",
     "recommended_actions": "Rekomendasi tindakan advisory",
     "open_harvest": "Buka Rencana Panen",
     "open_buyers": "Buka Buyer & Kapasitas"
   },
   "analysis": {
+    "eyebrow": "Risiko terjelaskan dan alokasi terkendala",
     "provenance": "Operasional kanonis simulasi · cuaca mungkin tidak tersedia · alokasi hanya advisory.",
     "horizon_start": "Awal horizon analisis tujuh hari",
     "running": "Menjalankan analisis risiko dan alokasi deterministik...",
@@ -183,6 +195,7 @@
     "short_distance": "Jarak lebih pendek"
   },
   "harvest": {
+    "eyebrow": "Perencanaan pasokan",
     "source_label": "Sumber data: catatan workspace kanonis (simulasi, manual, atau CSV).",
     "filters": "Filter panen",
     "filter_dates": "Filter rentang tanggal panen",
@@ -204,6 +217,8 @@
     "cancelled": "Rencana panen berhasil dibatalkan."
   },
   "buyers": {
+    "eyebrow": "Penyerapan pasar",
+    "provenance": "Buyer, permintaan, dan kapasitas distribusi tujuh hari dari data simulasi kanonis.",
     "section": "Buyer",
     "channel": "Kanal",
     "location": "Lokasi",
@@ -241,6 +256,7 @@
     "closed": "Permintaan buyer berhasil ditutup."
   },
   "capacity": {
+    "eyebrow": "Kesiapan distribusi",
     "section": "Kapasitas distribusi",
     "horizon_start": "Awal horizon tujuh hari",
     "quantity_kg": "Kapasitas tersedia (kg)",

@@ -13,7 +13,13 @@
   },
   "welcome": {
     "heading": "Welcome to MimpiTani",
+    "eyebrow": "Cooperative intelligence for perishable harvests",
     "description": "Early-warning and decision-support system for chili farmer cooperatives.",
+    "local_first": "Local-first · deterministic · advisory",
+    "hero_caption": "Simulated red bird's-eye chili pilot landscape in Kabupaten Magelang.",
+    "choose_workspace": "Choose how you want to begin",
+    "recommended": "Recommended demo",
+    "blank_canvas": "Clean workspace",
     "load_demo": "Load Demo Data",
     "start_empty": "Start Empty",
     "load_demo_desc": "Load deterministic simulated data for Koperasi Tani Merapi Sejahtera.",
@@ -82,6 +88,7 @@
     }
   },
   "radar": {
+    "eyebrow": "Seven-day operational outlook",
     "provenance": "Simulated operational data · advisory seven-day estimate.",
     "horizon_start": "Seven-day horizon start",
     "weather_continues": "Analysis continues with zero weather disruption contribution when weather is unavailable.",
@@ -90,16 +97,21 @@
     "potential_surplus": "Potential surplus",
     "operational_surplus": "Operationally constrained surplus",
     "chart_title": "Daily supply, compatible demand, and capacity",
+    "chart_subtitle": "See when harvest pressure exceeds market absorption and transport capacity.",
     "quantity_kg": "Quantity (kg)",
     "series": "Series",
     "risk_score": "Surplus risk score",
     "critical_date": "Critical date",
+    "pilot_map_title": "Pilot location",
+    "pilot_map_caption": "Approximate cooperative pilot area · no private farm coordinates.",
+    "decision_pulse": "Decision pulse",
     "top_factors": "Why risk is elevated",
     "recommended_actions": "Recommended advisory actions",
     "open_harvest": "Open Harvest Plans",
     "open_buyers": "Open Buyers & Capacity"
   },
   "analysis": {
+    "eyebrow": "Explainable risk and constrained allocation",
     "provenance": "Simulated canonical operations · weather may be unavailable · allocations are advisory only.",
     "horizon_start": "Seven-day analysis horizon start",
     "running": "Running deterministic risk and allocation analysis...",
@@ -183,6 +195,7 @@
     "short_distance": "Shorter distance"
   },
   "harvest": {
+    "eyebrow": "Supply planning",
     "source_label": "Data source: canonical workspace records (simulated, manual, or CSV).",
     "filters": "Harvest filters",
     "filter_dates": "Filter by harvest-date range",
@@ -204,6 +217,8 @@
     "cancelled": "Harvest plan cancelled successfully."
   },
   "buyers": {
+    "eyebrow": "Market absorption",
+    "provenance": "Canonical simulated buyers, demand, and seven-day distribution capacity.",
     "section": "Buyers",
     "channel": "Channel",
     "location": "Location",
@@ -241,6 +256,7 @@
     "closed": "Buyer demand closed successfully."
   },
   "capacity": {
+    "eyebrow": "Distribution readiness",
     "section": "Distribution capacity",
     "horizon_start": "Seven-day horizon start",
     "quantity_kg": "Available capacity (kg)",

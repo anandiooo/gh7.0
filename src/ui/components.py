@@ -3,7 +3,7 @@ import streamlit as st
 from src.config import DB_PATH
 from src.i18n.translator import get_language, set_language, t
 from src.services.workspace_service import WorkspaceSummary
-from src.ui.theme import ACCENT_WARNING_ORANGE, PRIMARY_DARK_GREEN, PRIMARY_TEXT
+from src.ui.theme import ACCENT_WARNING_ORANGE, PRIMARY_TEXT
 
 
 def sync_language() -> None:
@@ -33,12 +33,27 @@ def render_header() -> None:
     col_title, col_lang = st.columns([4, 1])
     with col_title:
         st.markdown(
-            f'<h1 style="color: {PRIMARY_DARK_GREEN}; margin-bottom: 0;">🌶️ {t("app.title")}</h1>',
+            '<div class="mt-brand-row">'
+            '<div class="mt-brand-mark">🌶️</div>'
+            "<div>"
+            f'<h1 class="mt-brand-title">{t("app.title")}</h1>'
+            f'<p class="mt-brand-tagline">{t("app.tagline")}</p>'
+            "</div></div>",
             unsafe_allow_html=True,
         )
-        st.caption(t("app.tagline"))
     with col_lang:
         render_language_switcher()
+
+
+def render_page_intro(*, icon: str, title: str, description: str, eyebrow: str) -> None:
+    st.markdown(
+        '<div class="mt-page-intro">'
+        f'<div class="mt-eyebrow">{eyebrow}</div>'
+        f"<h2>{icon}&nbsp; {title}</h2>"
+        f"<p>{description}</p>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
 
 
 def render_prototype_banner() -> None:

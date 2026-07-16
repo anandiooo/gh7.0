@@ -12,6 +12,7 @@ from src.ui.components import (
     active_database_path,
     is_workspace_initialized,
     render_header,
+    render_page_intro,
     render_prototype_banner,
     render_workspace_required,
     sync_language,
@@ -25,7 +26,12 @@ if not is_workspace_initialized():
 
 render_header()
 render_prototype_banner()
-st.subheader(t("nav.buyers_capacity"))
+render_page_intro(
+    icon="🏢",
+    title=t("nav.buyers_capacity"),
+    description=t("buyers.provenance"),
+    eyebrow=t("buyers.eyebrow"),
+)
 if notice := st.session_state.pop("buyer_notice", None):
     st.success(t(notice), icon="✅")
 

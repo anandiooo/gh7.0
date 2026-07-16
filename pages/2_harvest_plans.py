@@ -11,6 +11,7 @@ from src.ui.components import (
     active_database_path,
     is_workspace_initialized,
     render_header,
+    render_page_intro,
     render_prototype_banner,
     render_workspace_required,
     sync_language,
@@ -24,8 +25,12 @@ if not is_workspace_initialized():
 
 render_header()
 render_prototype_banner()
-st.subheader(t("nav.harvest_plans"))
-st.caption(t("harvest.source_label"))
+render_page_intro(
+    icon="🌾",
+    title=t("nav.harvest_plans"),
+    description=t("harvest.source_label"),
+    eyebrow=t("harvest.eyebrow"),
+)
 if notice := st.session_state.pop("harvest_notice", None):
     st.success(t(notice), icon="✅")
 
