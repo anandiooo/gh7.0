@@ -65,7 +65,208 @@
       "high": "Tinggi",
       "critical": "Kritis"
     },
-    "label": "Tingkat Risiko"
+    "label": "Tingkat Risiko",
+    "factor": {
+      "supply_demand_gap": "Pasokan melebihi permintaan kompatibel ({value:.1%}); kontribusi {points:.1f} poin.",
+      "harvest_concentration": "Panen terkonsentrasi pada satu hari ({value:.1%}); kontribusi {points:.1f} poin.",
+      "transport_capacity_gap": "Kapasitas transportasi harian tidak mencukupi ({value:.1%}); kontribusi {points:.1f} poin.",
+      "weather_disruption": "Konteks gangguan cuaca yang tersedia sebesar {value:.1%}; kontribusi {points:.1f} poin.",
+      "estimate_uncertainty": "Ketidakpastian estimasi berbobot kuantitas sebesar {value:.1%}; kontribusi {points:.1f} poin."
+    },
+    "factor_name": {
+      "supply_demand_gap": "Kesenjangan pasokan-permintaan",
+      "harvest_concentration": "Konsentrasi panen",
+      "transport_capacity_gap": "Kesenjangan kapasitas transportasi",
+      "weather_disruption": "Gangguan cuaca",
+      "estimate_uncertainty": "Ketidakpastian estimasi"
+    }
+  },
+  "radar": {
+    "provenance": "Data operasional simulasi · estimasi tujuh hari bersifat advisory.",
+    "horizon_start": "Awal horizon tujuh hari",
+    "weather_continues": "Analisis berlanjut dengan kontribusi gangguan cuaca nol saat cuaca tidak tersedia.",
+    "expected_harvest": "Estimasi panen",
+    "compatible_demand": "Permintaan kompatibel",
+    "potential_surplus": "Estimasi surplus potensial",
+    "operational_surplus": "Estimasi surplus terkendala operasional",
+    "chart_title": "Pasokan, permintaan kompatibel, dan kapasitas harian",
+    "quantity_kg": "Kuantitas (kg)",
+    "series": "Seri",
+    "risk_score": "Skor risiko surplus",
+    "critical_date": "Tanggal kritis",
+    "top_factors": "Mengapa risiko meningkat",
+    "recommended_actions": "Rekomendasi tindakan advisory",
+    "open_harvest": "Buka Rencana Panen",
+    "open_buyers": "Buka Buyer & Kapasitas"
+  },
+  "analysis": {
+    "provenance": "Operasional kanonis simulasi · cuaca mungkin tidak tersedia · alokasi hanya advisory.",
+    "horizon_start": "Awal horizon analisis tujuh hari",
+    "running": "Menjalankan analisis risiko dan alokasi deterministik...",
+    "completed": "Analisis dan alokasi advisory berhasil diselesaikan.",
+    "last_run": "Base run sukses terbaru: {timestamp}",
+    "stale_warning": "Analisis ini usang karena data operasional kanonis berubah. Jalankan base analysis baru sebelum skenario.",
+    "risk_score": "Skor risiko",
+    "allocated_kg": "Kuantitas dialokasikan",
+    "unallocated_kg": "Pasokan belum dialokasikan",
+    "unmet_demand_kg": "Permintaan belum terpenuhi",
+    "unallocated_rate": "Tingkat pasokan belum dialokasikan",
+    "fulfillment_rate": "Tingkat pemenuhan permintaan",
+    "solver_status": "Status solver",
+    "factor_breakdown": "Kontribusi faktor risiko",
+    "factor": "Faktor",
+    "raw_factor": "Nilai ternormalisasi",
+    "weight": "Bobot",
+    "points": "Poin berbobot",
+    "allocation_table": "Rencana alokasi advisory",
+    "delivery_date": "Tanggal pengiriman",
+    "reason": "Kode alasan",
+    "no_allocations": "Tidak ada alokasi layak untuk input saat ini.",
+    "unallocated_batches": "Batch panen belum dialokasikan",
+    "unmet_demands": "Permintaan buyer belum terpenuhi",
+    "all_supply_allocated": "Seluruh pasokan tersedia berhasil dialokasikan.",
+    "all_demand_fulfilled": "Seluruh permintaan dalam horizon terpenuhi.",
+    "advisory_disclaimer": "Hanya simulasi advisory. Alokasi belum dijalankan atau dikonfirmasi oleh buyer.",
+    "technical_details": "Detail teknis dan run terbaru",
+    "data_version": "Versi data kanonis",
+    "run_id": "ID run",
+    "run_type": "Tipe run",
+    "warning": {
+      "weather_unavailable": "Cuaca tidak tersedia; kontribusi risikonya nol dan analisis tetap berlanjut.",
+      "no_open_demand": "Tidak ada permintaan kompatibel terbuka dalam horizon ini.",
+      "missing_capacity": "Satu atau lebih tanggal tidak memiliki kapasitas dan dianggap nol.",
+      "no_harvest_data": "Tidak ada panen terencana untuk dianalisis.",
+      "no_supply": "Tidak ada pasokan terencana untuk dialokasikan.",
+      "no_demand": "Tidak ada permintaan layak untuk dialokasikan.",
+      "zero_capacity": "Kapasitas distribusi nol untuk seluruh tanggal horizon.",
+      "no_feasible_variables": "Tidak ada kombinasi alokasi yang kompatibel secara grade dan tanggal.",
+      "solver_exception": "Solver linear gagal; fallback layak deterministik digunakan.",
+      "solver_unsuccessful": "Solver tidak mengembalikan status sukses; fallback layak deterministik digunakan."
+    }
+  },
+  "scenario": {
+    "title": "Skenario sementara",
+    "description": "Uji override permintaan dan kapasitas sementara tanpa mengubah catatan operasional kanonis.",
+    "name": "Nama skenario",
+    "default_name": "Tambahan penyerapan dan kapasitas",
+    "add_demand": "Tambah permintaan buyer sementara",
+    "existing_buyer": "Konteks buyer yang ada",
+    "replace_capacity": "Tetapkan kapasitas efektif sementara",
+    "effective_capacity": "Kapasitas efektif skenario (kg)",
+    "run_action": "Jalankan Skenario Sementara",
+    "completed": "Skenario sementara selesai. Data operasional kanonis tidak berubah.",
+    "comparison_title": "Perbandingan sebelum dan sesudah",
+    "metric": "Metrik",
+    "before": "Base",
+    "after": "Skenario",
+    "delta": "Perubahan",
+    "temporary_notice": "Override dan hasil skenario adalah data sesi sementara dan tidak mengubah catatan panen, permintaan, buyer, atau kapasitas kanonis."
+  },
+  "action_code": {
+    "add_compatible_demand": "Hubungi atau tambahkan permintaan buyer yang kompatibel dengan grade tersedia.",
+    "increase_critical_date_capacity": "Tambah kapasitas distribusi pada tanggal kritis.",
+    "verify_low_confidence_harvests": "Verifikasi estimasi panen berkeyakinan rendah sebelum eksekusi.",
+    "review_clustered_harvest_dates": "Tinjau panen yang terkonsentrasi pada tanggal yang sama."
+  },
+  "solver_status": {
+    "optimal": "Optimal (solver HiGHS sukses)",
+    "feasible_fallback": "Fallback layak deterministik",
+    "no_data": "Tidak ada data yang dapat dialokasikan",
+    "failed": "Gagal"
+  },
+  "allocation_reason": {
+    "grade_compatible": "Grade kompatibel",
+    "deadline_feasible": "Deadline layak",
+    "capacity_available": "Kapasitas tersedia",
+    "high_priority": "Permintaan prioritas tinggi",
+    "early_delivery": "Pengiriman layak lebih awal",
+    "short_distance": "Jarak lebih pendek"
+  },
+  "harvest": {
+    "source_label": "Sumber data: catatan workspace kanonis (simulasi, manual, atau CSV).",
+    "filters": "Filter panen",
+    "filter_dates": "Filter rentang tanggal panen",
+    "start_date": "Tanggal mulai",
+    "end_date": "Tanggal akhir",
+    "planned_quantity": "Kuantitas terencana",
+    "quantity_kg": "Kuantitas (kg)",
+    "confidence": "Keyakinan estimasi",
+    "maturity_note": "Catatan kematangan (opsional)",
+    "add_title": "Tambah rencana panen",
+    "manage_title": "Ubah atau batalkan panen",
+    "select_batch": "Pilih batch panen",
+    "no_active_farmers": "Tidak ada petani aktif untuk rencana panen baru.",
+    "update_action": "Perbarui Rencana Panen",
+    "cancel_action": "Batalkan Rencana Panen",
+    "cancel_confirmation": "Saya mengonfirmasi rencana panen ini harus dibatalkan.",
+    "created": "Rencana panen berhasil ditambahkan.",
+    "updated": "Rencana panen berhasil diperbarui.",
+    "cancelled": "Rencana panen berhasil dibatalkan."
+  },
+  "buyers": {
+    "section": "Buyer",
+    "channel": "Kanal",
+    "location": "Lokasi",
+    "distance": "Jarak (km)",
+    "active": "Aktif",
+    "inactive": "Tidak aktif",
+    "add_title": "Tambah buyer",
+    "add_action": "Tambah Buyer",
+    "manage_title": "Ubah atau nonaktifkan buyer",
+    "select": "Pilih buyer",
+    "update_action": "Perbarui Buyer",
+    "deactivate_action": "Nonaktifkan Buyer",
+    "deactivate_confirmation": "Saya mengonfirmasi buyer ini harus dinonaktifkan.",
+    "created": "Buyer berhasil ditambahkan.",
+    "updated": "Buyer berhasil diperbarui.",
+    "deactivated": "Buyer berhasil dinonaktifkan."
+  },
+  "demand": {
+    "section": "Permintaan buyer",
+    "empty": "Belum ada permintaan buyer. Tambah permintaan terbuka untuk mengaktifkan alokasi.",
+    "quantity_kg": "Kuantitas permintaan (kg)",
+    "accepted_grades": "Grade yang diterima",
+    "deadline": "Tanggal dibutuhkan",
+    "priority": "Prioritas (3 tertinggi)",
+    "add_title": "Tambah permintaan buyer",
+    "add_action": "Tambah Permintaan",
+    "manage_title": "Ubah atau tutup permintaan",
+    "select": "Pilih permintaan",
+    "update_action": "Perbarui Permintaan",
+    "close_action": "Tutup Permintaan",
+    "close_confirmation": "Saya mengonfirmasi permintaan ini harus ditutup.",
+    "no_active_buyers": "Tambahkan buyer aktif sebelum membuat permintaan.",
+    "created": "Permintaan buyer berhasil ditambahkan.",
+    "updated": "Permintaan buyer berhasil diperbarui.",
+    "closed": "Permintaan buyer berhasil ditutup."
+  },
+  "capacity": {
+    "section": "Kapasitas distribusi",
+    "horizon_start": "Awal horizon tujuh hari",
+    "quantity_kg": "Kapasitas tersedia (kg)",
+    "note": "Catatan operasional",
+    "missing_warning": "{count} hari tidak memiliki kapasitas tersimpan dan dianggap nol.",
+    "save_action": "Simpan Kapasitas Tujuh Hari",
+    "saved": "Kapasitas distribusi berhasil disimpan."
+  },
+  "confidence": {
+    "low": "Rendah",
+    "medium": "Sedang",
+    "high": "Tinggi"
+  },
+  "batch_status": {
+    "planned": "Terencana",
+    "cancelled": "Dibatalkan"
+  },
+  "demand_status": {
+    "open": "Terbuka",
+    "closed": "Ditutup"
+  },
+  "channel": {
+    "traditional_market": "Pasar tradisional",
+    "retailer": "Retailer",
+    "restaurant": "Restoran",
+    "processor": "Pengolah"
   },
   "workspace": {
     "summary_title": "Ringkasan Workspace",
@@ -106,5 +307,6 @@
     "allocated": "Dialokasikan",
     "unallocated": "Belum Dialokasikan",
     "capacity": "Kapasitas"
+    ,"all": "Semua"
   }
 }

@@ -107,7 +107,7 @@ def _render_welcome() -> None:
                 t("welcome.load_demo"),
                 key="btn_load_demo",
                 type="primary",
-                use_container_width=True,
+                width="stretch",
                 icon="📦",
             ):
                 _run_initialization(WorkspaceMode.DEMO)
@@ -124,7 +124,7 @@ def _render_welcome() -> None:
             if st.button(
                 t("welcome.start_empty"),
                 key="btn_start_empty",
-                use_container_width=True,
+                width="stretch",
                 icon="📝",
             ):
                 _run_initialization(WorkspaceMode.EMPTY)
@@ -142,7 +142,7 @@ def _render_reset_control() -> None:
             t("workspace.reset_action"),
             key="btn_reset_workspace",
             disabled=not confirmed,
-            use_container_width=True,
+            width="stretch",
         ):
             mode = WorkspaceMode(st.session_state["workspace_mode"])
             _run_initialization(mode, reset=True)
@@ -173,4 +173,10 @@ else:
     _render_reset_control()
 
     pg = st.navigation(_workspace_pages())
-    pg.run()
+    try:
+        pg.run()
+    except MimpiTaniError as error:
+        st.error(user_safe_error_message(error))
+    except Exception:
+        logger.exception("Unexpected workspace page failure")
+        st.error(t("error.system"))

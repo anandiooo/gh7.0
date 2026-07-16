@@ -65,7 +65,208 @@
       "high": "High",
       "critical": "Critical"
     },
-    "label": "Risk Level"
+    "label": "Risk Level",
+    "factor": {
+      "supply_demand_gap": "Supply exceeds compatible demand ({value:.1%}); contribution {points:.1f} points.",
+      "harvest_concentration": "Harvest is concentrated on one day ({value:.1%}); contribution {points:.1f} points.",
+      "transport_capacity_gap": "Daily transport capacity is insufficient ({value:.1%}); contribution {points:.1f} points.",
+      "weather_disruption": "Available weather disruption context is {value:.1%}; contribution {points:.1f} points.",
+      "estimate_uncertainty": "Quantity-weighted estimate uncertainty is {value:.1%}; contribution {points:.1f} points."
+    },
+    "factor_name": {
+      "supply_demand_gap": "Supply-demand gap",
+      "harvest_concentration": "Harvest concentration",
+      "transport_capacity_gap": "Transport capacity gap",
+      "weather_disruption": "Weather disruption",
+      "estimate_uncertainty": "Estimate uncertainty"
+    }
+  },
+  "radar": {
+    "provenance": "Simulated operational data · advisory seven-day estimate.",
+    "horizon_start": "Seven-day horizon start",
+    "weather_continues": "Analysis continues with zero weather disruption contribution when weather is unavailable.",
+    "expected_harvest": "Expected harvest",
+    "compatible_demand": "Compatible demand",
+    "potential_surplus": "Potential surplus",
+    "operational_surplus": "Operationally constrained surplus",
+    "chart_title": "Daily supply, compatible demand, and capacity",
+    "quantity_kg": "Quantity (kg)",
+    "series": "Series",
+    "risk_score": "Surplus risk score",
+    "critical_date": "Critical date",
+    "top_factors": "Why risk is elevated",
+    "recommended_actions": "Recommended advisory actions",
+    "open_harvest": "Open Harvest Plans",
+    "open_buyers": "Open Buyers & Capacity"
+  },
+  "analysis": {
+    "provenance": "Simulated canonical operations · weather may be unavailable · allocations are advisory only.",
+    "horizon_start": "Seven-day analysis horizon start",
+    "running": "Running deterministic risk and allocation analysis...",
+    "completed": "Analysis and advisory allocation completed successfully.",
+    "last_run": "Latest successful base run: {timestamp}",
+    "stale_warning": "This analysis is stale because canonical operational data changed. Run a new base analysis before scenarios.",
+    "risk_score": "Risk score",
+    "allocated_kg": "Allocated quantity",
+    "unallocated_kg": "Unallocated supply",
+    "unmet_demand_kg": "Unmet demand",
+    "unallocated_rate": "Unallocated supply rate",
+    "fulfillment_rate": "Demand fulfillment rate",
+    "solver_status": "Solver status",
+    "factor_breakdown": "Risk factor contributions",
+    "factor": "Factor",
+    "raw_factor": "Normalized value",
+    "weight": "Weight",
+    "points": "Weighted points",
+    "allocation_table": "Advisory allocation plan",
+    "delivery_date": "Delivery date",
+    "reason": "Reason codes",
+    "no_allocations": "No feasible allocation is available for the current inputs.",
+    "unallocated_batches": "Unallocated harvest batches",
+    "unmet_demands": "Unmet buyer demands",
+    "all_supply_allocated": "All available supply was allocated.",
+    "all_demand_fulfilled": "All in-horizon demand was fulfilled.",
+    "advisory_disclaimer": "Advisory simulation only. Allocations have not been executed or confirmed by buyers.",
+    "technical_details": "Technical details and recent runs",
+    "data_version": "Canonical data version",
+    "run_id": "Run ID",
+    "run_type": "Run type",
+    "warning": {
+      "weather_unavailable": "Weather is unavailable; its risk contribution is zero and analysis continues.",
+      "no_open_demand": "No open compatible demand is available in this horizon.",
+      "missing_capacity": "One or more horizon dates have missing capacity and are treated as zero.",
+      "no_harvest_data": "No planned harvest is available for analysis.",
+      "no_supply": "No planned supply is available for allocation.",
+      "no_demand": "No eligible demand is available for allocation.",
+      "zero_capacity": "Distribution capacity is zero for all horizon dates.",
+      "no_feasible_variables": "No grade- and date-compatible allocation combination exists.",
+      "solver_exception": "The linear solver failed; a deterministic feasible fallback was used.",
+      "solver_unsuccessful": "The solver did not return success; a deterministic feasible fallback was used."
+    }
+  },
+  "scenario": {
+    "title": "Temporary scenario",
+    "description": "Test temporary demand and capacity overrides without changing canonical operational records.",
+    "name": "Scenario name",
+    "default_name": "Additional absorption and capacity",
+    "add_demand": "Add temporary buyer demand",
+    "existing_buyer": "Existing buyer context",
+    "replace_capacity": "Set temporary effective capacity",
+    "effective_capacity": "Effective scenario capacity (kg)",
+    "run_action": "Run Temporary Scenario",
+    "completed": "Temporary scenario completed. Canonical operational data was not changed.",
+    "comparison_title": "Before-and-after comparison",
+    "metric": "Metric",
+    "before": "Base",
+    "after": "Scenario",
+    "delta": "Change",
+    "temporary_notice": "Scenario overrides and results are temporary session data and do not modify canonical harvest, demand, buyer, or capacity records."
+  },
+  "action_code": {
+    "add_compatible_demand": "Contact or add buyer demand compatible with available grades.",
+    "increase_critical_date_capacity": "Increase distribution capacity on the critical date.",
+    "verify_low_confidence_harvests": "Verify low-confidence harvest estimates before execution.",
+    "review_clustered_harvest_dates": "Review harvests clustered on the same date."
+  },
+  "solver_status": {
+    "optimal": "Optimal (HiGHS solver success)",
+    "feasible_fallback": "Feasible deterministic fallback",
+    "no_data": "No allocatable data",
+    "failed": "Failed"
+  },
+  "allocation_reason": {
+    "grade_compatible": "Grade compatible",
+    "deadline_feasible": "Deadline feasible",
+    "capacity_available": "Capacity available",
+    "high_priority": "High-priority demand",
+    "early_delivery": "Early feasible delivery",
+    "short_distance": "Shorter distance"
+  },
+  "harvest": {
+    "source_label": "Data source: canonical workspace records (simulated, manual, or CSV).",
+    "filters": "Harvest filters",
+    "filter_dates": "Filter by harvest-date range",
+    "start_date": "Start date",
+    "end_date": "End date",
+    "planned_quantity": "Planned quantity",
+    "quantity_kg": "Quantity (kg)",
+    "confidence": "Estimate confidence",
+    "maturity_note": "Maturity note (optional)",
+    "add_title": "Add harvest plan",
+    "manage_title": "Edit or cancel a harvest",
+    "select_batch": "Select harvest batch",
+    "no_active_farmers": "No active farmers are available for a new harvest plan.",
+    "update_action": "Update Harvest Plan",
+    "cancel_action": "Cancel Harvest Plan",
+    "cancel_confirmation": "I confirm this harvest plan should be cancelled.",
+    "created": "Harvest plan added successfully.",
+    "updated": "Harvest plan updated successfully.",
+    "cancelled": "Harvest plan cancelled successfully."
+  },
+  "buyers": {
+    "section": "Buyers",
+    "channel": "Channel",
+    "location": "Location",
+    "distance": "Distance (km)",
+    "active": "Active",
+    "inactive": "Inactive",
+    "add_title": "Add buyer",
+    "add_action": "Add Buyer",
+    "manage_title": "Edit or deactivate a buyer",
+    "select": "Select buyer",
+    "update_action": "Update Buyer",
+    "deactivate_action": "Deactivate Buyer",
+    "deactivate_confirmation": "I confirm this buyer should be deactivated.",
+    "created": "Buyer added successfully.",
+    "updated": "Buyer updated successfully.",
+    "deactivated": "Buyer deactivated successfully."
+  },
+  "demand": {
+    "section": "Buyer demands",
+    "empty": "No buyer demands yet. Add an open demand to enable allocation.",
+    "quantity_kg": "Demand quantity (kg)",
+    "accepted_grades": "Accepted grades",
+    "deadline": "Required-by date",
+    "priority": "Priority (3 is highest)",
+    "add_title": "Add buyer demand",
+    "add_action": "Add Demand",
+    "manage_title": "Edit or close a demand",
+    "select": "Select demand",
+    "update_action": "Update Demand",
+    "close_action": "Close Demand",
+    "close_confirmation": "I confirm this demand should be closed.",
+    "no_active_buyers": "Add an active buyer before creating demand.",
+    "created": "Buyer demand added successfully.",
+    "updated": "Buyer demand updated successfully.",
+    "closed": "Buyer demand closed successfully."
+  },
+  "capacity": {
+    "section": "Distribution capacity",
+    "horizon_start": "Seven-day horizon start",
+    "quantity_kg": "Available capacity (kg)",
+    "note": "Operational note",
+    "missing_warning": "{count} day(s) have no stored capacity and are treated as zero.",
+    "save_action": "Save Seven-Day Capacity",
+    "saved": "Distribution capacity saved successfully."
+  },
+  "confidence": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "batch_status": {
+    "planned": "Planned",
+    "cancelled": "Cancelled"
+  },
+  "demand_status": {
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "channel": {
+    "traditional_market": "Traditional market",
+    "retailer": "Retailer",
+    "restaurant": "Restaurant",
+    "processor": "Processor"
   },
   "workspace": {
     "summary_title": "Workspace Summary",
@@ -106,5 +307,6 @@
     "allocated": "Allocated",
     "unallocated": "Unallocated",
     "capacity": "Capacity"
+    ,"all": "All"
   }
 }

@@ -1,10 +1,13 @@
+from datetime import date
 from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
+from src.enums import WorkspaceMode
 from src.errors import DatabaseError
+from src.services.analysis_service import AnalysisService
 from src.services.seed_service import EXPECTED_DEMO_COUNTS, EXPECTED_EMPTY_COUNTS
-from src.services.workspace_service import read_workspace_counts
+from src.services.workspace_service import read_workspace_counts, reset_workspace
 
 
 def test_app_renders_welcome_without_exception():
@@ -124,3 +127,51 @@ def test_workspace_service_error_becomes_safe_bilingual_ui_message(tmp_path, mon
     assert not at.exception
     assert any("Database tidak dapat diakses" in message.value for message in at.error)
     assert all("technical database detail" not in message.value for message in at.error)
+
+
+def test_seeded_harvest_page_renders_table_forms_and_cancel_confirmation(
+    tmp_path,
+):
+    database_path = tmp_path / "harvest-page.db"
+    reset_workspace(WorkspaceMode.DEMO, database_path)
+    at = AppTest.from_file("pages/2_harvest_plans.py", default_timeout=10)
+    at.session_state["workspace_initialized"] = True
+    at.session_state["database_path"] = str(database_path)
+    at.run()
+
+    assert not at.exception
+    assert at.dataframe
+    assert any(button.label == "Tambah Rencana Panen" for button in at.button)
+    assert at.button(key="cancel_harvest_button").disabled is True
+
+
+def test_seeded_buyer_capacity_page_renders_crud_and_capacity_controls(tmp_path):
+    database_path = tmp_path / "buyer-page.db"
+    reset_workspace(WorkspaceMode.DEMO, database_path)
+    at = AppTest.from_file("pages/3_buyers_and_capacity.py", default_timeout=10)
+    at.session_state["workspace_initialized"] = True
+    at.session_state["database_path"] = str(database_path)
+    at.run()
+
+    assert not at.exception
+    assert len(at.tabs) == 3
+    labels = {button.label for button in at.button}
+    assert "Tambah Buyer" in labels
+    assert "Tambah Permintaan" in labels
+    assert "Simpan Kapasitas Tujuh Hari" in labels
+
+
+def test_analysis_page_renders_persisted_result_and_scenario_controls(tmp_path):
+    database_path = tmp_path / "analysis-page.db"
+    reset_workspace(WorkspaceMode.DEMO, database_path)
+    AnalysisService(database_path).run_base(date.today())
+    at = AppTest.from_file("pages/4_analysis_and_simulation.py", default_timeout=10)
+    at.session_state["workspace_initialized"] = True
+    at.session_state["database_path"] = str(database_path)
+    at.run()
+
+    assert not at.exception
+    labels = {button.label for button in at.button}
+    assert "Jalankan Analisis & Alokasi" in labels
+    assert "Jalankan Skenario Sementara" in labels
+    assert at.dataframe
