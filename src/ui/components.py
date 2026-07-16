@@ -1,6 +1,8 @@
 import streamlit as st
 
+from src.config import DB_PATH
 from src.i18n.translator import get_language, set_language, t
+from src.services.workspace_service import WorkspaceSummary
 from src.ui.theme import ACCENT_WARNING_ORANGE, PRIMARY_DARK_GREEN, PRIMARY_TEXT
 
 
@@ -56,6 +58,10 @@ def is_workspace_initialized() -> bool:
     return bool(st.session_state.get("workspace_initialized", False))
 
 
+def active_database_path() -> str:
+    return str(st.session_state.get("database_path", DB_PATH))
+
+
 def render_workspace_required() -> None:
     sync_language()
     st.warning(t("state.workspace_required"))
@@ -73,3 +79,22 @@ def render_page_placeholder(page_title_key: str) -> None:
     render_prototype_banner()
     st.subheader(t(page_title_key))
     st.info(t("state.coming_soon"))
+
+
+def render_workspace_summary(summary: WorkspaceSummary) -> None:
+    st.subheader(t("workspace.summary_title"))
+    st.caption(
+        f"{t('workspace.mode')}: {summary.profile.workspace_mode.value} · "
+        f"{summary.profile.name} · {summary.profile.pilot_region}"
+    )
+    st.caption(f"{t('workspace.commodity')}: {t('workspace.commodity_name')}")
+    columns = st.columns(5)
+    metrics = (
+        ("workspace.farmers", summary.active_farmers),
+        ("workspace.harvest_batches", summary.planned_harvest_batches),
+        ("workspace.buyers", summary.active_buyers),
+        ("workspace.demands", summary.open_demands),
+        ("workspace.capacity_days", summary.capacity_days),
+    )
+    for column, (label_key, value) in zip(columns, metrics, strict=True):
+        column.metric(t(label_key), value)

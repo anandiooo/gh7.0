@@ -21,8 +21,8 @@
     "initializing": "Initializing workspace...",
     "init_failed": "Failed to initialize workspace.",
     "disclaimer": "This is a hackathon prototype. All operational data is simulated.",
-    "workspace_demo_ready": "Demo mode selected. Demo data will be initialized in the database phase.",
-    "workspace_empty_ready": "Empty mode selected."
+    "workspace_demo_ready": "Demo data initialized successfully. / Data demo berhasil diinisialisasi.",
+    "workspace_empty_ready": "Empty workspace initialized successfully. / Workspace kosong berhasil diinisialisasi."
   },
   "weather": {
     "live": "BMKG Live",
@@ -66,6 +66,28 @@
       "critical": "Critical"
     },
     "label": "Risk Level"
+  },
+  "workspace": {
+    "summary_title": "Workspace Summary",
+    "mode": "Workspace mode",
+    "commodity": "Commodity",
+    "commodity_name": "Red bird's-eye chili",
+    "farmers": "Active farmers",
+    "harvest_batches": "Planned harvest batches",
+    "buyers": "Active buyers",
+    "demands": "Open demands",
+    "capacity_days": "Capacity days",
+    "reset_title": "Reset workspace",
+    "reset_description": "Reset clears operational data and deterministically recreates the current mode.",
+    "reset_confirmation": "I confirm the workspace reset. / Saya mengonfirmasi reset workspace.",
+    "reset_action": "Reset Workspace / Reset Workspace"
+  },
+  "error": {
+    "validation": "Invalid data. Check the input and try again. / Data tidak valid. Periksa input dan coba lagi.",
+    "conflict": "Data conflicts with an existing record. / Data bertentangan dengan catatan yang ada.",
+    "not_found": "Required data was not found. / Data yang diperlukan tidak ditemukan.",
+    "database": "The database could not be accessed. Please retry. / Database tidak dapat diakses. Coba lagi.",
+    "system": "Workspace initialization failed. Please retry. / Workspace gagal diinisialisasi. Coba lagi."
   },
   "common": {
     "kg": "kg",

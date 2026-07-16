@@ -27,6 +27,16 @@ To start the Streamlit interface:
 streamlit run app.py
 ```
 
+The application creates `data/mimpitani.db` only after the operator explicitly selects
+Demo or Empty workspace initialization.
+
+To initialize or deterministically reset the default database in Demo mode without
+starting Streamlit:
+
+```cmd
+python scripts/initialize_demo.py
+```
+
 ## Development and Testing
 
 Run the automated test suite:
@@ -46,6 +56,7 @@ python -m ruff format --check .
 
 ## Project Status
 
-**Phase 0 Complete**: Basic application shell, strict bilingual system (id/en), robust UI theming, testing framework, and modular routing infrastructure.
+**Phase 1**: Canonical Pydantic contracts, SQLite schema, repositories, deterministic Demo
+and Empty workspace initialization, and local reset behavior.
 
 *Note: As this is a hackathon prototype, all operational data is simulated. Weather data integration via BMKG is planned for a future implementation phase.*

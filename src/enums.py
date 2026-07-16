@@ -29,6 +29,11 @@ class SourceType(StrEnum):
     SEED = "SEED"
 
 
+class SeedableSource(StrEnum):
+    MANUAL = "MANUAL"
+    SEED = "SEED"
+
+
 class ChannelType(StrEnum):
     TRADITIONAL_MARKET = "TRADITIONAL_MARKET"
     RETAILER = "RETAILER"
@@ -45,6 +50,11 @@ class WeatherSourceStatus(StrEnum):
     LIVE = "LIVE"
     CACHE = "CACHE"
     UNAVAILABLE = "UNAVAILABLE"
+
+
+class AnalysisRunType(StrEnum):
+    BASE = "BASE"
+    SCENARIO = "SCENARIO"
 
 
 class RiskLevel(StrEnum):

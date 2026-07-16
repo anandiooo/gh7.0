@@ -8,7 +8,19 @@ class ValidationError(MimpiTaniError):
     pass
 
 
-class DatabaseError(MimpiTaniError):
+class SystemError(MimpiTaniError):
+    pass
+
+
+class DatabaseError(SystemError):
+    pass
+
+
+class ConflictError(MimpiTaniError):
+    pass
+
+
+class NotFoundError(MimpiTaniError):
     pass
 
 

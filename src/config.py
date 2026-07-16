@@ -1,10 +1,11 @@
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 APP_TIMEZONE = ZoneInfo("Asia/Jakarta")
 TIMEZONE_NAME = "Asia/Jakarta"
 DEFAULT_COOPERATIVE_NAME = "Koperasi Tani Merapi Sejahtera"
 PILOT_COMMODITY_CODE = "CABAI_RAWIT_MERAH"
-PILOT_REGION = "Kabupaten Magelang"
+PILOT_REGION = "Kabupaten Magelang, Jawa Tengah"
 DEFAULT_ADM4_CODE = "33.08.01.2001"
 OPERATIONAL_HORIZON_DAYS = 7
 PLANNING_HORIZON_DAYS = 14
@@ -16,7 +17,9 @@ KG_TOLERANCE = 0.001
 BMKG_BASE_URL = "https://api.bmkg.go.id/publik/prakiraan-cuaca"
 BMKG_TIMEOUT_SECONDS = 3
 BMKG_CACHE_STALE_HOURS = 24
-DB_PATH = "mimpitani.db"
+DB_PATH = Path("data/mimpitani.db")
+SQLITE_BUSY_TIMEOUT_MS = 5000
+SCHEMA_VERSION = 1
 RISK_WEIGHT_SUPPLY_DEMAND_GAP = 45
 RISK_WEIGHT_HARVEST_CONCENTRATION = 20
 RISK_WEIGHT_TRANSPORT_CAPACITY_GAP = 15
