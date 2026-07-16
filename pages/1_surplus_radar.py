@@ -98,9 +98,9 @@ figure.add_trace(
         name=t("common.supply"),
         mode="lines+markers",
         fill="tozeroy",
-        fillcolor="rgba(199,57,47,0.10)",
-        line=dict(color="#C7392F", width=3),
-        marker=dict(size=8, color="#C7392F", line=dict(color="white", width=2)),
+        fillcolor="rgba(33,73,22,0.12)",
+        line=dict(color="#214916", width=3),
+        marker=dict(size=8, color="#214916", line=dict(color="#FAF8EF", width=2)),
     )
 )
 figure.add_trace(
@@ -109,8 +109,8 @@ figure.add_trace(
         y=[item.quantity_kg for item in radar.analysis.daily_compatible_demand],
         name=t("radar.compatible_demand"),
         mode="lines+markers",
-        line=dict(color="#388E3C", width=3),
-        marker=dict(size=8, color="#388E3C", line=dict(color="white", width=2)),
+        line=dict(color="#A9EB35", width=3),
+        marker=dict(size=8, color="#A9EB35", line=dict(color="#214916", width=2)),
     )
 )
 figure.add_trace(
@@ -120,32 +120,41 @@ figure.add_trace(
         name=t("common.capacity"),
         mode="lines+markers",
         line=dict(color=ACCENT_WARNING_ORANGE, width=3, dash="dot"),
-        marker=dict(size=8, color=ACCENT_WARNING_ORANGE, line=dict(color="white", width=2)),
+        marker=dict(
+            size=8,
+            color=ACCENT_WARNING_ORANGE,
+            line=dict(color="#214916", width=2),
+        ),
     )
 )
 figure.add_vline(
     x=radar.risk.critical_date.isoformat(),
     line_width=1.5,
     line_dash="dash",
-    line_color="rgba(199,57,47,0.55)",
+    line_color="rgba(247,220,39,0.82)",
 )
 figure.update_layout(
     xaxis_title=t("common.date"),
     yaxis_title=t("radar.quantity_kg"),
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
-    margin=dict(l=20, r=20, t=42, b=20),
+    margin=dict(l=58, r=20, t=42, b=52),
     height=410,
     hovermode="x unified",
     paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(247,250,245,0.78)",
-    font=dict(color="#334B35"),
+    plot_bgcolor="rgba(250,248,239,0.92)",
+    font=dict(color="#214916", family="Helvetica World, Helvetica Neue, Helvetica, Arial"),
     xaxis=dict(showgrid=False, tickformat="%d %b"),
-    yaxis=dict(gridcolor="rgba(20,83,25,0.09)", zeroline=False),
+    yaxis=dict(gridcolor="rgba(41,127,57,0.14)", zeroline=False),
 )
 chart_column, pulse_column = st.columns([2.15, 1], gap="medium")
 with chart_column:
     st.caption(t("radar.chart_subtitle"))
-    st.plotly_chart(figure, width="stretch", config={"displayModeBar": False})
+    st.plotly_chart(
+        figure,
+        width="stretch",
+        theme=None,
+        config={"displayModeBar": False},
+    )
 with pulse_column:
     st.markdown(f"### {t('radar.decision_pulse')}")
     gauge = go.Figure(
@@ -160,13 +169,13 @@ with pulse_column:
             gauge={
                 "axis": {"range": [0, 100], "tickwidth": 0, "tickcolor": "white"},
                 "bar": {"color": RISK_COLORS[radar.risk.level.value], "thickness": 0.32},
-                "bgcolor": "rgba(56,142,60,0.08)",
+                "bgcolor": "rgba(169,235,53,0.12)",
                 "borderwidth": 0,
                 "steps": [
-                    {"range": [0, 25], "color": "rgba(22,163,74,0.08)"},
-                    {"range": [25, 50], "color": "rgba(217,119,6,0.08)"},
-                    {"range": [50, 75], "color": "rgba(234,88,12,0.08)"},
-                    {"range": [75, 100], "color": "rgba(220,38,38,0.08)"},
+                    {"range": [0, 25], "color": "rgba(169,235,53,0.14)"},
+                    {"range": [25, 50], "color": "rgba(247,220,39,0.14)"},
+                    {"range": [50, 75], "color": "rgba(41,127,57,0.14)"},
+                    {"range": [75, 100], "color": "rgba(33,73,22,0.14)"},
                 ],
             },
         )
@@ -176,7 +185,12 @@ with pulse_column:
         margin=dict(l=22, r=22, t=52, b=10),
         paper_bgcolor="rgba(0,0,0,0)",
     )
-    st.plotly_chart(gauge, width="stretch", config={"displayModeBar": False})
+    st.plotly_chart(
+        gauge,
+        width="stretch",
+        theme=None,
+        config={"displayModeBar": False},
+    )
     st.metric(t("radar.critical_date"), radar.risk.critical_date.strftime("%d %b %Y"))
 
 kpi_columns = st.columns(5)
@@ -202,7 +216,7 @@ with location_column:
             lat=[PILOT_LATITUDE],
             lon=[PILOT_LONGITUDE],
             mode="markers",
-            marker={"size": 18, "color": "#C7392F"},
+            marker={"size": 18, "color": "#F7DC27"},
             text=[workspace.profile.name],
             hovertemplate="%{text}<extra></extra>",
         )
@@ -217,7 +231,12 @@ with location_column:
         margin=dict(l=0, r=0, t=0, b=0),
         paper_bgcolor="rgba(0,0,0,0)",
     )
-    st.plotly_chart(pilot_map, width="stretch", config={"displayModeBar": False})
+    st.plotly_chart(
+        pilot_map,
+        width="stretch",
+        theme=None,
+        config={"displayModeBar": False},
+    )
     st.caption(t("radar.pilot_map_caption"))
 with explanation_column:
     factor_column, action_column = st.columns(2)

@@ -58,13 +58,14 @@ def render_page_intro(*, icon: str, title: str, description: str, eyebrow: str) 
 
 def render_prototype_banner() -> None:
     st.markdown(
-        f'<div style="background-color: {ACCENT_WARNING_ORANGE}15; '
+        f'<div style="background-color: {ACCENT_WARNING_ORANGE}; '
         f"border-left: 4px solid {ACCENT_WARNING_ORANGE}; "
         f"padding: 8px 12px; margin-bottom: 16px; border-radius: 4px; "
         f'color: {PRIMARY_TEXT};">⚠️ {t("app.data_banner")}'
         f'<span style="margin-left: 12px; padding: 2px 8px; '
-        f"background-color: {ACCENT_WARNING_ORANGE}30; border-radius: 4px; "
-        f'font-size: 0.85em;">{t("app.prototype_badge")}</span></div>',
+        f"background-color: {PRIMARY_TEXT}; border-radius: 4px; "
+        f'color: #FAF8EF; font-size: 0.85em;">'
+        f"{t('app.prototype_badge')}</span></div>",
         unsafe_allow_html=True,
     )
 

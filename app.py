@@ -109,8 +109,8 @@ def _render_welcome() -> None:
     with col_demo:
         st.markdown(
             f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
-            f"border-radius: 16px; border: 1px solid rgba(56,142,60,.22); "
-            f'box-shadow: 0 12px 30px rgba(20,83,25,.06); min-height: 150px;">'
+            f"border-radius: 16px; border: 1px solid rgba(169,235,53,.72); "
+            f'box-shadow: 0 12px 30px rgba(33,73,22,.20); min-height: 150px;">'
             f'<span class="mt-pill">{t("welcome.recommended")}</span>'
             f'<h3 style="color: {PRIMARY_DARK_GREEN};">📦 {t("welcome.load_demo")}</h3>'
             f'<p style="color: {PRIMARY_TEXT}; font-size: 0.92rem;">'
@@ -128,8 +128,8 @@ def _render_welcome() -> None:
     with col_empty:
         st.markdown(
             f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
-            f"border-radius: 16px; border: 1px solid rgba(217,119,6,.22); "
-            f'box-shadow: 0 12px 30px rgba(20,83,25,.06); min-height: 150px;">'
+            f"border-radius: 16px; border: 1px solid rgba(247,220,39,.72); "
+            f'box-shadow: 0 12px 30px rgba(33,73,22,.20); min-height: 150px;">'
             f'<span class="mt-pill">{t("welcome.blank_canvas")}</span>'
             f'<h3 style="color: {PRIMARY_DARK_GREEN};">📝 {t("welcome.start_empty")}</h3>'
             f'<p style="color: {PRIMARY_TEXT}; font-size: 0.92rem;">'

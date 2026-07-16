@@ -7,23 +7,33 @@ def render_global_styles() -> None:
         """
         <style>
         :root {
-            --mt-forest: #145319;
-            --mt-leaf: #388E3C;
-            --mt-lime: #8BC34A;
-            --mt-amber: #D97706;
-            --mt-chili: #C7392F;
-            --mt-ink: #183019;
-            --mt-muted: #657466;
-            --mt-canvas: #F4F7F2;
-            --mt-surface: rgba(255, 255, 255, 0.94);
-            --mt-line: rgba(20, 83, 25, 0.12);
+            --mt-background: #297F39;
+            --mt-cream: #FAF8EF;
+            --mt-neon: #A9EB35;
+            --mt-ink: #214916;
+            --mt-yellow: #F7DC27;
+            --mt-muted: rgba(33, 73, 22, 0.72);
+            --mt-surface: rgba(250, 248, 239, 0.97);
+            --mt-line: rgba(169, 235, 53, 0.42);
+            --mt-display-font: "Agrandir Tight", "Arial Narrow",
+                "Helvetica Neue Condensed", sans-serif;
+            --mt-body-font: "Helvetica World", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        html, body, .stApp, button, input, textarea, select {
+            font-family: var(--mt-body-font);
+        }
+
+        h1, h2, h3, .mt-brand-title, .mt-eyebrow, .mt-section-label {
+            font-family: var(--mt-display-font);
         }
 
         .stApp {
             background:
-                radial-gradient(circle at 92% 4%, rgba(217, 119, 6, 0.10), transparent 24rem),
-                radial-gradient(circle at 5% 30%, rgba(56, 142, 60, 0.08), transparent 28rem),
-                var(--mt-canvas);
+                radial-gradient(circle at 92% 4%, rgba(247, 220, 39, 0.18), transparent 24rem),
+                radial-gradient(circle at 5% 35%, rgba(169, 235, 53, 0.14), transparent 30rem),
+                var(--mt-background);
+            color: var(--mt-cream);
         }
 
         [data-testid="stMainBlockContainer"] {
@@ -33,8 +43,12 @@ def render_global_styles() -> None:
         }
 
         [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #F7FAF5 0%, #EDF4E9 100%);
+            background: linear-gradient(180deg, #214916 0%, #183B11 100%);
             border-right: 1px solid var(--mt-line);
+        }
+
+        [data-testid="stSidebar"] * {
+            color: var(--mt-cream);
         }
 
         [data-testid="stSidebarNav"] a {
@@ -44,18 +58,22 @@ def render_global_styles() -> None:
         }
 
         [data-testid="stSidebarNav"] a:hover {
-            background: rgba(56, 142, 60, 0.10);
+            background: rgba(169, 235, 53, 0.14);
             transform: translateX(2px);
         }
 
         [data-testid="stSidebarNav"] a[aria-current="page"] {
-            background: linear-gradient(90deg, rgba(56, 142, 60, 0.18), rgba(139, 195, 74, 0.10));
-            color: var(--mt-forest);
+            background: linear-gradient(90deg, var(--mt-neon), #C9F47E);
+            color: var(--mt-ink);
             font-weight: 700;
         }
 
-        h1, h2, h3 {
+        [data-testid="stSidebarNav"] a[aria-current="page"] * {
             color: var(--mt-ink);
+        }
+
+        h1, h2, h3 {
+            color: var(--mt-cream);
             letter-spacing: -0.025em;
         }
 
@@ -65,7 +83,7 @@ def render_global_styles() -> None:
             background: var(--mt-surface);
             border: 1px solid var(--mt-line);
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(25, 63, 28, 0.055);
+            box-shadow: 0 12px 30px rgba(33, 73, 22, 0.24);
         }
 
         [data-testid="stMetricLabel"] {
@@ -85,7 +103,7 @@ def render_global_styles() -> None:
             background: var(--mt-surface);
             border: 1px solid var(--mt-line);
             border-radius: 18px;
-            box-shadow: 0 12px 34px rgba(25, 63, 28, 0.055);
+            box-shadow: 0 14px 34px rgba(33, 73, 22, 0.24);
         }
 
         .stButton > button,
@@ -96,21 +114,27 @@ def render_global_styles() -> None:
             transition: transform 130ms ease, box-shadow 130ms ease;
         }
 
+        .stButton > button[kind="primary"] {
+            background: var(--mt-neon);
+            border-color: var(--mt-neon);
+            color: var(--mt-ink);
+        }
+
         .stButton > button:hover,
         [data-testid="stPageLink-NavLink"]:hover {
             transform: translateY(-1px);
-            box-shadow: 0 8px 18px rgba(20, 83, 25, 0.12);
+            box-shadow: 0 8px 18px rgba(33, 73, 22, 0.28);
         }
 
         [data-testid="stForm"] {
-            background: rgba(255, 255, 255, 0.78);
+            background: rgba(33, 73, 22, 0.78);
             border: 1px solid var(--mt-line);
             border-radius: 16px;
             padding: 1.05rem;
         }
 
         [data-testid="stExpander"] {
-            background: rgba(255, 255, 255, 0.74);
+            background: rgba(33, 73, 22, 0.66);
             border-color: var(--mt-line);
             border-radius: 14px;
         }
@@ -122,13 +146,13 @@ def render_global_styles() -> None:
 
         [data-testid="stTabs"] button[role="tab"] {
             border-radius: 999px;
-            background: rgba(56, 142, 60, 0.08);
+            background: rgba(250, 248, 239, 0.12);
             padding: 0.5rem 1rem;
         }
 
         [data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
-            background: var(--mt-forest);
-            color: white;
+            background: var(--mt-neon);
+            color: var(--mt-ink);
         }
 
         .mt-brand-row {
@@ -144,26 +168,26 @@ def render_global_styles() -> None:
             width: 48px;
             height: 48px;
             border-radius: 15px;
-            background: linear-gradient(145deg, #145319, #388E3C);
-            box-shadow: 0 10px 24px rgba(20, 83, 25, 0.19);
+            background: linear-gradient(145deg, var(--mt-neon), var(--mt-yellow));
+            box-shadow: 0 10px 24px rgba(33, 73, 22, 0.28);
             font-size: 1.55rem;
         }
 
         .mt-brand-title {
             margin: 0;
-            color: var(--mt-forest);
+            color: var(--mt-cream);
             font-size: clamp(1.75rem, 3vw, 2.45rem);
             line-height: 1;
         }
 
         .mt-brand-tagline {
             margin: 0.32rem 0 0;
-            color: var(--mt-muted);
+            color: rgba(250, 248, 239, 0.78);
             font-size: 0.92rem;
         }
 
         .mt-eyebrow {
-            color: var(--mt-leaf);
+            color: var(--mt-neon);
             font-size: 0.76rem;
             font-weight: 800;
             letter-spacing: 0.12em;
@@ -173,7 +197,7 @@ def render_global_styles() -> None:
         .mt-page-intro {
             margin: 0.25rem 0 1rem;
             padding: 0.82rem 1.15rem;
-            background: linear-gradient(120deg, rgba(255,255,255,0.96), rgba(235,244,230,0.88));
+            background: linear-gradient(120deg, rgba(250,248,239,0.98), rgba(169,235,53,0.88));
             border: 1px solid var(--mt-line);
             border-radius: 18px;
         }
@@ -181,11 +205,16 @@ def render_global_styles() -> None:
         .mt-page-intro h2 {
             margin: 0.12rem 0 0.18rem;
             font-size: clamp(1.45rem, 2.6vw, 1.95rem);
+            color: var(--mt-ink);
         }
 
         .mt-page-intro p {
             margin: 0;
             color: var(--mt-muted);
+        }
+
+        .mt-page-intro .mt-eyebrow {
+            color: var(--mt-background);
         }
 
         .mt-pill {
@@ -194,8 +223,8 @@ def render_global_styles() -> None:
             gap: 0.35rem;
             padding: 0.35rem 0.72rem;
             border-radius: 999px;
-            background: rgba(56, 142, 60, 0.10);
-            color: var(--mt-forest);
+            background: var(--mt-neon);
+            color: var(--mt-ink);
             font-size: 0.78rem;
             font-weight: 750;
         }
@@ -208,27 +237,27 @@ def render_global_styles() -> None:
             margin: 0.55rem 0 0.9rem;
             font-size: clamp(2.55rem, 5.7vw, 4.8rem);
             line-height: 0.98;
-            color: var(--mt-forest);
+            color: var(--mt-cream);
         }
 
         .mt-hero-copy .mt-lead {
             max-width: 34rem;
-            color: #506451;
+            color: rgba(250, 248, 239, 0.88);
             font-size: clamp(1rem, 1.65vw, 1.22rem);
             line-height: 1.65;
         }
 
         [data-testid="stImage"] img {
             border-radius: 24px;
-            box-shadow: 0 24px 55px rgba(25, 63, 28, 0.18);
-            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 24px 55px rgba(33, 73, 22, 0.34);
+            border: 2px solid var(--mt-yellow);
             aspect-ratio: 16 / 9;
             object-fit: cover;
         }
 
         .mt-section-label {
             margin: 1.4rem 0 0.4rem;
-            color: var(--mt-muted);
+            color: var(--mt-neon);
             font-size: 0.76rem;
             font-weight: 800;
             letter-spacing: 0.10em;
