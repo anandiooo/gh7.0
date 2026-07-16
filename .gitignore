@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Runtime database — never commit
+*.db
+*.sqlite
+*.sqlite3
+
+# Weather cache — managed at runtime
+data/cache/*.json
+data/cache/*.pickle
+!data/cache/.gitkeep
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.local

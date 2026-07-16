@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "MimpiTani (Farmers' Dream)",
+    "tagline": "Detect surplus early. Protect every harvest.",
+    "prototype_badge": "Prototype",
+    "data_banner": "Harvest, buyer, and capacity data in this prototype are simulated."
+  },
+  "nav": {
+    "radar": "Surplus Radar",
+    "harvest_plans": "Harvest Plans",
+    "buyers_capacity": "Buyers & Capacity",
+    "analysis_simulation": "Analysis & Simulation"
+  },
+  "welcome": {
+    "heading": "Welcome to MimpiTani",
+    "description": "Early-warning and decision-support system for chili farmer cooperatives.",
+    "load_demo": "Load Demo Data",
+    "start_empty": "Start Empty",
+    "load_demo_desc": "Load deterministic simulated data for Koperasi Tani Merapi Sejahtera.",
+    "start_empty_desc": "Start with an empty workspace and no operational data.",
+    "initializing": "Initializing workspace...",
+    "init_failed": "Failed to initialize workspace.",
+    "disclaimer": "This is a hackathon prototype. All operational data is simulated.",
+    "workspace_demo_ready": "Demo mode selected. Demo data will be initialized in the database phase.",
+    "workspace_empty_ready": "Empty mode selected."
+  },
+  "weather": {
+    "live": "BMKG Live",
+    "cache": "BMKG Cache",
+    "cache_with_time": "BMKG Cache ({timestamp})",
+    "unavailable": "Weather Unavailable",
+    "credit": "Weather data source: BMKG"
+  },
+  "state": {
+    "workspace_required": "Please initialize a workspace first.",
+    "empty": {
+      "radar": "No harvest data yet. Add a harvest plan or load demo data to get started.",
+      "harvest": "No harvest plans yet. Use the form below to add your first harvest plan.",
+      "buyers": "No buyers yet. Add a buyer to enable allocation.",
+      "capacity": "No distribution capacity set. Configure daily capacity to enable optimization.",
+      "analysis": "No analysis yet. Run analysis after harvest and buyer data is available."
+    },
+    "loading": "Loading...",
+    "error": "An error occurred.",
+    "coming_soon": "Coming soon in the next implementation phase."
+  },
+  "action": {
+    "run_analysis": "Run Analysis & Allocation",
+    "add_harvest": "Add Harvest Plan",
+    "load_demo_data": "Load Demo Data",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry": "Retry",
+    "edit": "Edit",
+    "close": "Close",
+    "reset_demo": "Reset Demo Data",
+    "download_template": "Download CSV Template",
+    "import_csv": "Import CSV"
+  },
+  "risk": {
+    "level": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "label": "Risk Level"
+  },
+  "common": {
+    "kg": "kg",
+    "days": "days",
+    "date": "Date",
+    "status": "Status",
+    "name": "Name",
+    "quantity": "Quantity",
+    "grade": "Grade",
+    "total": "Total",
+    "farmer": "Farmer",
+    "buyer": "Buyer",
+    "demand": "Demand",
+    "supply": "Supply",
+    "surplus": "Surplus",
+    "allocated": "Allocated",
+    "unallocated": "Unallocated",
+    "capacity": "Capacity"
+  }
+}

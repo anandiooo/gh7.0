@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "MimpiTani",
+    "tagline": "Antisipasi surplus, selamatkan hasil panen.",
+    "prototype_badge": "Prototype",
+    "data_banner": "Data panen, buyer, dan kapasitas pada prototype ini adalah simulasi."
+  },
+  "nav": {
+    "radar": "Radar Surplus",
+    "harvest_plans": "Rencana Panen",
+    "buyers_capacity": "Buyer & Kapasitas",
+    "analysis_simulation": "Analisis & Simulasi"
+  },
+  "welcome": {
+    "heading": "Selamat Datang di MimpiTani",
+    "description": "Sistem peringatan dini dan pendukung keputusan untuk koperasi petani cabai.",
+    "load_demo": "Muat Data Demo",
+    "start_empty": "Mulai Kosong",
+    "load_demo_desc": "Muat data simulasi deterministik untuk Koperasi Tani Merapi Sejahtera.",
+    "start_empty_desc": "Mulai dengan workspace kosong tanpa data operasional.",
+    "initializing": "Menginisialisasi workspace...",
+    "init_failed": "Gagal menginisialisasi workspace.",
+    "disclaimer": "Ini adalah prototype hackathon. Semua data operasional adalah simulasi.",
+    "workspace_demo_ready": "Mode demo dipilih. Data demo akan diinisialisasi pada fase database.",
+    "workspace_empty_ready": "Mode kosong dipilih."
+  },
+  "weather": {
+    "live": "BMKG Live",
+    "cache": "Cache BMKG",
+    "cache_with_time": "Cache BMKG ({timestamp})",
+    "unavailable": "Cuaca Tidak Tersedia",
+    "credit": "Sumber data cuaca: BMKG"
+  },
+  "state": {
+    "workspace_required": "Silakan inisialisasi workspace terlebih dahulu.",
+    "empty": {
+      "radar": "Belum ada data panen. Tambah rencana panen atau muat data demo untuk memulai.",
+      "harvest": "Belum ada rencana panen. Gunakan form di bawah untuk menambah rencana panen pertama.",
+      "buyers": "Belum ada buyer. Tambah buyer untuk memulai alokasi.",
+      "capacity": "Belum ada kapasitas distribusi. Atur kapasitas harian untuk mengaktifkan optimasi.",
+      "analysis": "Belum ada analisis. Jalankan analisis setelah data panen dan buyer tersedia."
+    },
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan.",
+    "coming_soon": "Segera hadir pada fase implementasi selanjutnya."
+  },
+  "action": {
+    "run_analysis": "Jalankan Analisis & Alokasi",
+    "add_harvest": "Tambah Rencana Panen",
+    "load_demo_data": "Muat Data Demo",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "retry": "Coba Lagi",
+    "edit": "Ubah",
+    "close": "Tutup",
+    "reset_demo": "Reset Data Demo",
+    "download_template": "Unduh Template CSV",
+    "import_csv": "Impor CSV"
+  },
+  "risk": {
+    "level": {
+      "low": "Rendah",
+      "medium": "Sedang",
+      "high": "Tinggi",
+      "critical": "Kritis"
+    },
+    "label": "Tingkat Risiko"
+  },
+  "common": {
+    "kg": "kg",
+    "days": "hari",
+    "date": "Tanggal",
+    "status": "Status",
+    "name": "Nama",
+    "quantity": "Kuantitas",
+    "grade": "Grade",
+    "total": "Total",
+    "farmer": "Petani",
+    "buyer": "Buyer",
+    "demand": "Permintaan",
+    "supply": "Pasokan",
+    "surplus": "Surplus",
+    "allocated": "Dialokasikan",
+    "unallocated": "Belum Dialokasikan",
+    "capacity": "Kapasitas"
+  }
+}
