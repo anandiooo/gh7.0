@@ -11,6 +11,7 @@ build/
 
 # Virtual environment
 .venv/
+.venv-clean/
 venv/
 ENV/
 
@@ -41,3 +42,43 @@ desktop.ini
 # Environment
 .env
 .env.local
+
+# Testing and linting
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.tox/
+
+# Logs
+*.log
+
+# Documentation/Notes (excluding core project files)
+*.md
+!README.md
+!SPEC.md
+!CLAUDE.md
+!walkthrough.md
+!implementation_plan.md
+
+# Archives and submission files
+*.zip
+*.tar.gz
+*.tar
+*.rar
+
+# IDE and AI tools
+.history/
+.cursor/
+.gemini/
+.aider*/
+
+# Temporary and backup files
+*~
+*.bak
+tmp/
+temp/
+
+# Jupyter Notebook (if used for scratchpads)
+.ipynb_checkpoints/

@@ -68,6 +68,22 @@ def test_harvest_service_create_filter_update_cancel_and_version(
     assert compute_data_version(database_path) != updated_version
 
 
+def test_harvest_service_creates_first_farmer_for_empty_workspace(
+    database_path, reference_date
+) -> None:
+    reset_workspace(WorkspaceMode.EMPTY, database_path, reference_date=reference_date)
+    service = HarvestService(database_path)
+
+    farmer = service.create_farmer(
+        name="Siti Rahayu",
+        village_name="Sumber",
+        subdistrict_name="Dukun",
+    )
+
+    assert farmer.active is True
+    assert service.list_active_farmers() == [farmer]
+
+
 @pytest.mark.parametrize("quantity", [0, -1, float("inf"), float("nan"), 100001])
 def test_harvest_service_rejects_invalid_quantity(database_path, reference_date, quantity) -> None:
     reset_workspace(WorkspaceMode.DEMO, database_path, reference_date=reference_date)
@@ -204,6 +220,29 @@ def test_capacity_service_missing_days_upsert_and_version(database_path, referen
             capacity_date=reference_date,
             available_capacity_kg=float("inf"),
         )
+
+
+def test_capacity_week_is_validated_before_atomic_write(database_path, reference_date) -> None:
+    reset_workspace(WorkspaceMode.EMPTY, database_path, reference_date=reference_date)
+    service = CapacityService(database_path)
+
+    with pytest.raises(ValidationError):
+        service.upsert_week(
+            [
+                (reference_date, 500, None),
+                (reference_date + timedelta(days=1), -1, None),
+            ]
+        )
+    assert service.capacities.count() == 0
+
+    stored = service.upsert_week(
+        [(reference_date + timedelta(days=offset), 500 + offset, None) for offset in range(7)]
+    )
+    assert len(stored) == 7
+    assert all(not day.missing for day in service.seven_day_horizon(reference_date))
+
+    with pytest.raises(ValidationError):
+        service.upsert_week([(reference_date, 100, None), (reference_date, 200, None)])
 
 
 def test_seeded_records_can_mutate_before_their_deterministic_clock_time(database_path) -> None:

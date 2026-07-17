@@ -21,7 +21,7 @@ from src.ui.components import (
     sync_language,
 )
 from src.ui.messages import user_safe_error_message
-from src.ui.theme import ACCENT_WARNING_ORANGE, PRIMARY_DARK_GREEN, RISK_COLORS
+from src.ui.theme import ACCENT_WARNING_ORANGE
 
 logger = logging.getLogger(__name__)
 sync_language()
@@ -65,9 +65,7 @@ except Exception:
 
 weather_label = t(f"weather.{radar.risk.weather_status.value.lower()}")
 status_columns = st.columns([1, 2])
-status_columns[0].markdown(
-    f'<span class="mt-pill">🌦️ {weather_label}</span>', unsafe_allow_html=True
-)
+status_columns[0].info(f"🌦️ {weather_label}")
 status_columns[1].caption(t("radar.weather_continues"))
 if latest:
     if analysis_service.is_stale(latest):
@@ -81,15 +79,90 @@ if latest:
 
 if not radar.risk.has_data:
     st.info(t("state.empty.radar"))
-    with st.expander(t("workspace.summary_title"), expanded=True):
+    st.markdown(f"### {t('radar.setup_title')}")
+    setup_steps = (
+        (
+            workspace.planned_harvest_batches > 0,
+            "radar.setup_harvest",
+            "radar.setup_harvest_help",
+            "pages/2_harvest_plans.py",
+            "🌾",
+        ),
+        (
+            workspace.active_buyers > 0 and workspace.open_demands > 0,
+            "radar.setup_buyer",
+            "radar.setup_buyer_help",
+            "pages/3_buyers_and_capacity.py",
+            "🏢",
+        ),
+        (
+            workspace.capacity_days > 0,
+            "radar.setup_capacity",
+            "radar.setup_capacity_help",
+            "pages/3_buyers_and_capacity.py",
+            "🚚",
+        ),
+        (
+            False,
+            "radar.setup_analysis",
+            "radar.setup_analysis_help",
+            "pages/4_analysis_and_simulation.py",
+            "📊",
+        ),
+    )
+    for index, (complete, title_key, help_key, page, icon) in enumerate(setup_steps):
+        status = f"✅ {t('radar.setup_done')}" if complete else f"○ {t('radar.setup_pending')}"
+        step_columns = st.columns([1.6, 3, 1.6], vertical_alignment="center")
+        step_columns[0].markdown(f"**{status} — {t(title_key)}**")
+        step_columns[1].caption(t(help_key))
+        if step_columns[2].button(
+            t(title_key), key=f"setup_step_{index}", icon=icon, width="stretch"
+        ):
+            st.switch_page(page)
+    with st.expander(t("workspace.summary_title")):
         render_workspace_summary(workspace)
-    st.page_link("pages/2_harvest_plans.py", label=t("radar.open_harvest"), icon="🌾")
     st.stop()
 
 st.markdown(
-    f'<div class="mt-section-label">{t("radar.chart_title")}</div>',
+    '<div class="mt-status-card">'
+    f'<div class="mt-eyebrow">{t("risk.label")}</div>'
+    f"<h2>{t(f'risk.level.{radar.risk.level.value.lower()}').upper()} · "
+    f"{radar.risk.score:.1f}/100</h2><p>{t('radar.status_summary')}</p>"
+    f"<p><strong>{t('radar.critical_date')}:</strong> "
+    f"{radar.risk.critical_date.strftime('%d %b %Y')}</p></div>",
     unsafe_allow_html=True,
 )
+action_columns = st.columns([1.5, 1, 2])
+if action_columns[0].button(
+    t("action.run_analysis"), type="primary", key="radar_run_analysis", width="stretch"
+):
+    try:
+        with st.spinner(t("analysis.running")):
+            outcome = analysis_service.run_base(horizon_start)
+    except MimpiTaniError as error:
+        st.error(user_safe_error_message(error))
+    except Exception:
+        logger.exception("Base analysis failed")
+        st.error(t("error.system"))
+    else:
+        st.session_state["active_analysis_run_id"] = outcome.run.id
+        st.session_state["analysis_notice"] = "analysis.completed"
+        st.rerun()
+action_columns[1].page_link(
+    "pages/3_buyers_and_capacity.py", label=t("radar.open_buyers"), icon="🏢"
+)
+
+kpi_columns = st.columns(4)
+kpis = (
+    ("radar.expected_harvest", radar.analysis.total_supply_kg),
+    ("radar.compatible_demand", radar.analysis.compatible_demand_kg),
+    ("common.capacity", sum(item.quantity_kg for item in radar.analysis.daily_capacity)),
+    ("radar.operational_surplus", radar.operationally_constrained_surplus_kg),
+)
+for column, (label, value) in zip(kpi_columns, kpis, strict=True):
+    column.metric(t(label), f"{value:,.1f} kg")
+
+st.subheader(t("radar.chart_title"))
 figure = go.Figure()
 figure.add_trace(
     go.Scatter(
@@ -143,69 +216,15 @@ figure.update_layout(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(250,248,239,0.92)",
     font=dict(color="#214916", family="Helvetica World, Helvetica Neue, Helvetica, Arial"),
-    xaxis=dict(showgrid=False, tickformat="%d %b"),
+    xaxis=dict(showgrid=False, tickformat="%d %b %Y"),
     yaxis=dict(gridcolor="rgba(41,127,57,0.14)", zeroline=False),
 )
-chart_column, pulse_column = st.columns([2.15, 1], gap="medium")
-with chart_column:
-    st.caption(t("radar.chart_subtitle"))
-    st.plotly_chart(
-        figure,
-        width="stretch",
-        theme=None,
-        config={"displayModeBar": False},
-    )
-with pulse_column:
-    st.markdown(f"### {t('radar.decision_pulse')}")
-    gauge = go.Figure(
-        go.Indicator(
-            mode="gauge+number",
-            value=radar.risk.score,
-            number={"suffix": "/100", "font": {"size": 34, "color": PRIMARY_DARK_GREEN}},
-            title={
-                "text": t(f"risk.level.{radar.risk.level.value.lower()}"),
-                "font": {"size": 17, "color": RISK_COLORS[radar.risk.level.value]},
-            },
-            gauge={
-                "axis": {"range": [0, 100], "tickwidth": 0, "tickcolor": "white"},
-                "bar": {"color": RISK_COLORS[radar.risk.level.value], "thickness": 0.32},
-                "bgcolor": "rgba(169,235,53,0.12)",
-                "borderwidth": 0,
-                "steps": [
-                    {"range": [0, 25], "color": "rgba(169,235,53,0.14)"},
-                    {"range": [25, 50], "color": "rgba(247,220,39,0.14)"},
-                    {"range": [50, 75], "color": "rgba(41,127,57,0.14)"},
-                    {"range": [75, 100], "color": "rgba(33,73,22,0.14)"},
-                ],
-            },
-        )
-    )
-    gauge.update_layout(
-        height=275,
-        margin=dict(l=22, r=22, t=52, b=10),
-        paper_bgcolor="rgba(0,0,0,0)",
-    )
-    st.plotly_chart(
-        gauge,
-        width="stretch",
-        theme=None,
-        config={"displayModeBar": False},
-    )
-    st.metric(t("radar.critical_date"), radar.risk.critical_date.strftime("%d %b %Y"))
-
-kpi_columns = st.columns(5)
-kpis = (
-    ("radar.expected_harvest", radar.analysis.total_supply_kg),
-    ("radar.compatible_demand", radar.analysis.compatible_demand_kg),
-    ("radar.potential_surplus", radar.potential_surplus_kg),
-    ("radar.operational_surplus", radar.operationally_constrained_surplus_kg),
-)
-for column, (label, value) in zip(kpi_columns[:4], kpis, strict=True):
-    column.metric(t(label), f"{value:,.1f} kg")
-kpi_columns[4].metric(
-    t("risk.label"),
-    t(f"risk.level.{radar.risk.level.value.lower()}"),
-    f"{radar.risk.score:.1f}/100",
+st.caption(t("radar.chart_subtitle"))
+st.plotly_chart(
+    figure,
+    width="stretch",
+    theme=None,
+    config={"displayModeBar": False},
 )
 
 location_column, explanation_column = st.columns([1, 2], gap="medium")
@@ -229,7 +248,6 @@ with location_column:
         },
         height=310,
         margin=dict(l=0, r=0, t=0, b=0),
-        paper_bgcolor="rgba(0,0,0,0)",
     )
     st.plotly_chart(
         pilot_map,
@@ -257,20 +275,6 @@ with explanation_column:
 
 for warning in radar.risk.warnings:
     st.warning(t(f"analysis.warning.{warning.lower()}"))
-
-if st.button(t("action.run_analysis"), type="primary", key="radar_run_analysis"):
-    try:
-        with st.spinner(t("analysis.running")):
-            outcome = analysis_service.run_base(horizon_start)
-    except MimpiTaniError as error:
-        st.error(user_safe_error_message(error))
-    except Exception:
-        logger.exception("Base analysis failed")
-        st.error(t("error.system"))
-    else:
-        st.session_state["active_analysis_run_id"] = outcome.run.id
-        st.session_state["analysis_notice"] = "analysis.completed"
-        st.rerun()
 
 guidance_columns = st.columns(2)
 with guidance_columns[0]:

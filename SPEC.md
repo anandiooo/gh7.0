@@ -1,1311 +1,1267 @@
 # MimpiTani — SPEC.md
 
-## 1. Overview
+# Rapid Hackathon Execution Edition
 
-### Product identity
+## 1. Status and Deadline
 
-- **Indonesian product name:** MimpiTani
-- **English product name:** MimpiTani (Farmers' Dream)
-- **Indonesian tagline:** Antisipasi surplus, selamatkan hasil panen.
-- **English tagline:** Detect surplus early. Protect every harvest.
-- **Product category:** Early-warning and decision-support system
-- **Primary dashboard module:** Radar Surplus / Surplus Radar
+MimpiTani is being developed for a time-limited hackathon submission.
 
-**One-liner:** MimpiTani helps an agricultural cooperative detect likely chili harvest surpluses within the next seven days and generate an explainable allocation plan before produce becomes unabsorbed, loses value, or is wasted.
+Current implementation status:
 
-**Problem:** Small farmers usually estimate and communicate harvests separately. A cooperative may therefore discover too late that several members will harvest the same perishable commodity at the same time while confirmed buyer demand and daily transport capacity are insufficient. The late discovery leaves little time to contact alternative buyers, reserve processing capacity, or adjust distribution. MimpiTani combines upcoming harvest estimates, compatible buyer demand, transport capacity, and short-horizon weather context to expose the imbalance early and recommend an allocation plan.
+- Phase 0: COMPLETE
+- Phase 1: COMPLETE
+- Python 3.12 verification: PASSED
+- SQLite schema and repositories: COMPLETE
+- Deterministic Demo and Empty workspace initialization: COMPLETE
+- Current automated test baseline: 83 passing tests
 
-**Target user:** A single operator of a chili-farmer cooperative or collection center in a simulated pilot in Kabupaten Magelang, Central Java. Farmers and buyers are stakeholders and data sources, but they do not receive separate accounts or portals in v1.
+Remaining implementation time at the start of this revision: approximately 21 hours.
 
-**Demo organization:** Koperasi Tani Merapi Sejahtera.
+This specification replaces the previous sequential Phase 2–10 workflow with a compressed, checkpoint-based execution plan.
 
-**Pilot configuration:**
+The implementation agent is authorized to combine related phases and continue between checkpoints without requesting approval after every phase.
 
-- Commodity: cabai rawit merah / red bird's-eye chili.
-- Operational horizon: next 7 days.
-- Stored planning horizon: up to 14 days.
-- Weather horizon: only dates covered by available BMKG forecasts.
-- Deployment mode: public hackathon prototype.
-- Harvest, buyer, and logistics data: simulated.
-- External live data: BMKG weather when available.
-- Decision mode: advisory only. The operator remains responsible for approving and executing decisions.
+The priority is a reliable end-to-end judging demonstration, not exhaustive production completeness.
 
-**Language requirements:**
+---
 
-- UI languages: Bahasa Indonesia and English.
-- Default: Bahasa Indonesia.
-- Language switcher: `ID | EN`.
-- The preference persists for the active browser session.
-- Product name in Indonesian: `MimpiTani`.
-- Product name in English: `MimpiTani (Farmers' Dream)`.
-- All user-facing strings use centralized translation keys.
-- Names, locations, IDs, and user-entered content are not translated.
+## 2. Product Identity
 
-**Core product principle:** The application must answer these questions clearly:
+### Product names
+
+- Indonesian: MimpiTani
+- English: MimpiTani (Farmers' Dream)
+
+### Taglines
+
+- Indonesian: Antisipasi surplus, selamatkan hasil panen.
+- English: Detect surplus early. Protect every harvest.
+
+### Product category
+
+Early-warning and decision-support system for agricultural cooperatives.
+
+### Primary module
+
+- Indonesian: Radar Surplus
+- English: Surplus Radar
+
+### One-liner
+
+MimpiTani helps an agricultural cooperative detect likely chili-harvest surpluses within the next seven days and generate an explainable allocation plan before produce becomes unabsorbed, loses value, or is wasted.
+
+### Demo organization
+
+Koperasi Tani Merapi Sejahtera.
+
+### Pilot
+
+- Region: Kabupaten Magelang, Central Java
+- Commodity: Cabai rawit merah / red bird's-eye chili
+- Planning horizon: 7 days
+- Stored active horizon: up to 14 days
+- Operational data: simulated
+- Weather context: BMKG live, cached, or unavailable
+- Decision mode: advisory only
+
+---
+
+## 3. Core Judging Story
+
+The complete demo must answer these questions clearly:
 
 1. How much chili is expected to be harvested?
-2. How much compatible buyer demand is available?
+2. How much compatible buyer demand exists?
 3. Is daily transport capacity sufficient?
-4. When and why is surplus risk highest?
-5. How should available harvest be allocated?
-6. How does adding a buyer or increasing transport capacity change the result?
+4. When is surplus risk highest?
+5. Why is the risk high?
+6. How should available harvest be allocated?
+7. How much harvest remains unallocated?
+8. How does adding demand or transport capacity improve the result?
 
-The product is not a marketplace, price forecaster, fleet-management system, or autonomous trading platform.
+### Required end-to-end demo
 
----
+1. Open MimpiTani.
+2. Choose Demo workspace.
+3. Show deterministic cooperative data.
+4. Open Radar Surplus.
+5. Show high expected harvest relative to demand and capacity.
+6. Display surplus risk score, level, critical date, and explanations.
+7. Run allocation.
+8. Show allocations, unallocated supply, and unmet demand.
+9. Add temporary buyer demand or temporary transport capacity.
+10. Run a scenario.
+11. Show improved before-and-after metrics.
+12. Explain that the recommendation is advisory and based partly on simulated data.
 
-## 2. Core User Flows
-
-### Flow 1 — Start a planning workspace
-
-Operator opens MimpiTani → selects `Muat Data Demo / Load Demo Data` or `Mulai Kosong / Start Empty` → the application initializes the selected workspace → prototype and data-source labels appear → operator enters the Surplus Radar.
-
-Demo mode loads deterministic seeded data. Empty mode creates only the schema and workspace configuration. Simulated data must never load silently.
-
-### Flow 2 — Record an upcoming harvest
-
-Operator opens **Rencana Panen / Harvest Plans** → adds one harvest estimate manually or imports a CSV → the application validates farmer, date, quantity, grade, location, and estimate confidence → operator reviews errors and confirms valid data → records are stored → previous analysis is marked stale.
-
-### Flow 3 — Record market absorption and distribution capacity
-
-Operator opens **Buyer & Kapasitas / Buyers & Capacity** → adds or edits a buyer and its demand → specifies accepted grades, requested quantity, delivery deadline, distance, priority, and channel type → enters daily aggregate transport capacity → valid demand and capacity records are stored.
-
-### Flow 4 — Detect and understand surplus risk
-
-Operator opens **Radar Surplus / Surplus Radar** → selects the seven-day horizon → the application aggregates harvest supply, compatible buyer demand, and transport capacity → retrieves live or cached BMKG weather context → calculates a risk score and level → shows critical dates and a plain-language explanation in the selected language.
-
-### Flow 5 — Generate and compare an allocation scenario
-
-Operator opens **Analisis & Simulasi / Analysis & Simulation** → runs the allocation optimizer → reviews allocations by batch, buyer, and delivery date → sees unallocated supply and unmet demand → adds a temporary buyer and increases temporary transport capacity → reruns the scenario → compares before and after results → optionally saves the scenario snapshot.
+This path has priority over all secondary interfaces.
 
 ---
 
-## 3. Scope
+## 4. Priority Classification
 
-### In scope (v1)
+### P0 — Submission-critical
 
-1. **Bilingual single-operator application**
-   - No login.
-   - One configured cooperative.
-   - One pilot commodity.
-   - Bahasa Indonesia and English.
-   - Default Bahasa Indonesia.
-   - Session-persistent `ID | EN` switcher.
-   - Centralized translation dictionaries with matching keys.
+These features must work before submission:
 
-2. **Explicit workspace initialization**
-   - `Muat Data Demo / Load Demo Data`.
-   - `Mulai Kosong / Start Empty`.
-   - Deterministic demo seed.
-   - No simulated operational data is loaded without the operator's choice.
+- Demo and Empty workspace initialization.
+- Manual harvest create, edit, and cancel.
+- Buyer create, edit, and deactivate.
+- Buyer-demand create, edit, and close.
+- Seven-day distribution-capacity editing.
+- Deterministic five-factor risk engine.
+- Linear allocation optimizer.
+- Deterministic greedy fallback.
+- Functional Surplus Radar.
+- Functional Analysis and Simulation screen.
+- At least two scenario overrides:
+  - temporary buyer demand;
+  - temporary transport capacity.
+- Before-and-after scenario comparison.
+- Bilingual core demo path.
+- Data-provenance labels.
+- Error handling without raw tracebacks.
+- Local execution.
+- Public deployment or documented local fallback.
+- Final tests, lint, format check, and Git safety check.
 
-3. **Harvest-plan management**
-   - Create, read, update, and cancel harvest estimates.
-   - Manual entry.
-   - CSV template, preview, validation, and import.
-   - Quality grade A/B/C entered manually.
-   - Estimate confidence: Low, Medium, High.
+### P1 — Important when time permits
 
-4. **Buyer and demand management**
-   - Create, read, update, and deactivate buyers.
-   - Create, read, update, and close demands.
-   - Specific buyer plus channel type.
-   - Accepted grades, requested quantity, deadline, priority, and distance.
+Implement after all P0 items work:
 
-5. **Aggregate daily distribution capacity**
-   - One total capacity in kilograms per date.
-   - Missing dates are treated as zero and visibly flagged.
-   - No vehicle or route model.
+- CSV template.
+- CSV preview and atomic import.
+- Duplicate import detection.
+- Temporary harvest-date scenario override.
+- Saving scenario snapshots.
+- Analysis history list.
+- Live BMKG retrieval.
+- Cached BMKG fallback.
+- Wider mobile responsiveness.
+- Detailed filtering on CRUD screens.
 
-6. **Seven-day supply-demand radar**
-   - Daily expected harvest.
-   - Compatible demand.
-   - Daily transport capacity.
-   - Potential surplus.
-   - Operationally constrained surplus.
-   - Critical date.
+### P2 — Cut or simplify when blocked
 
-7. **Explainable five-factor surplus-risk engine**
-   - Deterministic and testable.
-   - Score 0–100.
-   - Low, Medium, High, Critical.
-   - Supply-demand gap.
-   - Harvest concentration.
-   - Transport-capacity gap.
-   - Weather disruption.
-   - Estimate uncertainty.
-   - Bilingual explanations generated from translation keys.
+These items must not delay the working demo:
 
-8. **Linear allocation optimizer**
-   - A harvest batch can be split across buyers.
-   - Respects quantity, grade, harvest date, buyer deadline, and daily transport capacity.
-   - Prioritizes minimizing unallocated supply.
-   - Secondary preferences: higher-priority demand, earlier feasible delivery, shorter distance.
-   - Deterministic greedy fallback only on solver failure.
+- Elaborate animations.
+- Complex table styling.
+- Full historical analysis-management interface.
+- Advanced CSV partial-import workflow.
+- Downloadable invalid-row CSV.
+- Deep mobile-layout optimization.
+- Custom design-system abstractions.
+- Additional charts beyond the required daily Radar chart.
+- Full browser automation coverage for every control.
+- Exhaustive technical-detail panels.
+- Nonessential refactoring.
+- Repository-hygiene review loops after the repository is already clean.
 
-9. **What-if scenario simulator**
-   - Add or increase temporary buyer demand.
-   - Change temporary transport capacity.
-   - Move a temporary harvest date.
-   - Compare base and scenario metrics.
-   - Temporary changes do not mutate canonical data.
-   - Saved snapshots are immutable and linked to the base run.
+A P1 or P2 feature may be simplified when the main demo remains correct and the limitation is documented.
 
-10. **BMKG weather adapter**
-    - Live API when available.
-    - Cached fallback.
-    - Analysis continues when weather is unavailable.
-    - Cache timestamp and stale state are shown.
-    - BMKG is visibly credited.
+---
 
-11. **Analysis history**
-    - Base analysis snapshots.
-    - Scenario snapshots linked to base runs.
-    - Failed runs do not overwrite the last successful result.
-    - Canonical changes mark old analysis stale.
+## 5. Locked Scope
 
-12. **Operational metrics**
-    - Allocated produce in kilograms.
-    - Unallocated supply rate.
-    - Buyer-demand fulfillment rate.
+### In scope
 
-13. **Demo reset**
-    - Rebuild from version-controlled seed data.
-    - Explicit confirmation is required.
+- One cooperative.
+- One commodity.
+- One operator.
+- Bahasa Indonesia and English.
+- Manual and seeded operational data.
+- Harvest planning.
+- Buyer and demand management.
+- Aggregate daily transport capacity.
+- Seven-day surplus detection.
+- Deterministic explainable risk score.
+- Linear allocation optimization.
+- Scenario comparison.
+- BMKG context with graceful fallback.
+- Immutable analysis snapshots where implemented.
+- Demo reset.
 
-### Explicitly out of scope (later / never in v1)
+### Explicitly out of scope
 
-The coding agent must not implement any of the following unless `SPEC.md` is explicitly revised:
+Do not implement:
 
-- Farmer or buyer accounts and portals.
-- Authentication, authorization, or multi-role access.
+- Authentication.
+- Authorization or user roles.
+- Farmer accounts.
+- Buyer accounts.
 - Multi-cooperative tenancy.
 - Multi-commodity support.
-- Marketplace, orders, contracts, invoices, payments, or escrow.
-- Real buyer outreach or WhatsApp/SMS/email/push notifications.
-- Any price module or exact future-price prediction.
-- Revenue-protected calculations.
-- Machine-learning classifiers trained on synthetic decision labels.
-- LLM-generated operational decisions.
-- Computer-vision grading.
-- IoT, sensors, or satellite forecasting.
-- Vehicle entities, drivers, fuel, fleet, or road-route optimization.
-- Cold-storage inventory management.
+- Marketplace orders.
+- Contracts.
+- Payments or escrow.
+- Buyer outreach.
+- WhatsApp, SMS, email, or push notifications.
+- Price prediction.
+- Revenue calculations.
+- LLM-generated decisions.
+- ML classifiers trained on simulated labels.
+- Computer vision.
+- IoT or satellite integration.
+- Vehicle, driver, or route models.
+- Cold-storage inventory.
 - Automatic harvest rescheduling.
-- Autonomous execution of recommendations.
+- Autonomous execution.
 - Credit, insurance, or investment products.
-- Native Android, iOS, or Flutter application.
+- Native mobile application.
 - PDF export.
-- Government or national monitoring dashboards.
-- Personally identifiable data such as NIK, phone number, bank information, or exact household address.
+- Government monitoring dashboards.
+- Private personal information.
 
 ---
 
-## 4. Data Model
+## 6. Locked Technical Stack
 
-SQLite is the canonical local store. Pydantic models define validation contracts. IDs are UUID strings generated by the application. All timestamps use ISO 8601 consistently and are displayed in the `Asia/Jakarta` timezone.
+Use:
 
-### CooperativeProfile
+- Python 3.12
+- Streamlit multipage application
+- SQLite through standard-library sqlite3
+- Pydantic
+- pandas
+- NumPy
+- scipy.optimize.linprog with HiGHS
+- Plotly
+- httpx
+- pytest
+- Streamlit testing utilities where practical
+- Ruff
+- requirements.txt with exact pins
 
-Represents the single v1 workspace.
+Do not add:
 
-```text
-CooperativeProfile
-- id: str, primary key
-- name: str
-- pilot_region: str
-- commodity_code: str
-- adm4_code: str | null
-- workspace_mode: enum("DEMO", "EMPTY")
-- created_at: datetime
-- updated_at: datetime
-```
-
-Rules:
-
-- Exactly one profile exists in v1.
-- Demo name: `Koperasi Tani Merapi Sejahtera`.
-- Commodity code is fixed to `CABAI_RAWIT_MERAH`.
-
-### Farmer
-
-Represents a cooperative member whose future harvest is being planned.
-
-```text
-Farmer
-- id: str, primary key
-- name: str, required
-- village_name: str, required
-- subdistrict_name: str, required
-- adm4_code: str | null
-- is_active: bool, default true
-- created_at: datetime
-- updated_at: datetime
-
-Relationships:
-- has_many: HarvestBatch
-```
-
-Constraints:
-
-- `name` must be 2–100 characters.
-- `adm4_code`, when present, must follow the dotted Indonesian level-IV administrative-code pattern accepted by the weather adapter.
-- Inactive farmers remain visible in historical analysis but cannot receive new harvest records.
-
-### HarvestBatch
-
-Represents one expected harvest from one farmer on one date.
-
-```text
-HarvestBatch
-- id: str, primary key
-- farmer_id: str, foreign key -> Farmer.id
-- commodity_code: str, fixed to "CABAI_RAWIT_MERAH" in v1
-- estimated_harvest_date: date
-- estimated_quantity_kg: float
-- quality_grade: enum("A", "B", "C")
-- estimate_confidence: enum("LOW", "MEDIUM", "HIGH")
-- maturity_note: str | null
-- status: enum("PLANNED", "CANCELLED")
-- source_type: enum("MANUAL", "CSV", "SEED")
-- external_reference: str | null
-- created_at: datetime
-- updated_at: datetime
-
-Relationships:
-- belongs_to: Farmer
-- has_many: Allocation
-```
-
-Constraints:
-
-- Quantity must be greater than 0 and no more than 100,000 kg.
-- Harvest date must be within 90 days of the current date for manual input.
-- Cancelled batches do not contribute to current supply.
-- An exact duplicate from the same CSV import must be rejected or flagged before insertion.
-
-### Buyer
-
-Represents a specific market, retailer, restaurant, processor, or other destination.
-
-```text
-Buyer
-- id: str, primary key
-- name: str, required
-- channel_type: enum(
-    "TRADITIONAL_MARKET",
-    "RETAILER",
-    "RESTAURANT",
-    "PROCESSOR"
-  )
-- location_name: str, required
-- distance_km: float
-- is_active: bool, default true
-- created_at: datetime
-- updated_at: datetime
-
-Relationships:
-- has_many: BuyerDemand
-```
-
-Constraints:
-
-- Distance must be 0–1,000 km.
-- Inactive buyers remain in previous analysis snapshots but are excluded from new analysis.
-
-### BuyerDemand
-
-Represents a buyer's open demand for the pilot commodity.
-
-```text
-BuyerDemand
-- id: str, primary key
-- buyer_id: str, foreign key -> Buyer.id
-- commodity_code: str, fixed to "CABAI_RAWIT_MERAH"
-- requested_quantity_kg: float
-- accepted_grades_json: str
-- required_by_date: date
-- priority: int, 1–3
-- status: enum("OPEN", "CLOSED")
-- created_at: datetime
-- updated_at: datetime
-
-Relationships:
-- belongs_to: Buyer
-- has_many: Allocation
-```
-
-Constraints:
-
-- Requested quantity must be greater than 0.
-- Accepted grades must contain at least one of A, B, or C.
-- Priority `3` is highest; `1` is lowest.
-- Closed demand is excluded from new optimization runs.
-
-### DistributionCapacity
-
-Represents aggregate transport capacity available on one date.
-
-```text
-DistributionCapacity
-- id: str, primary key
-- capacity_date: date, unique
-- available_capacity_kg: float
-- note: str | null
-- created_at: datetime
-- updated_at: datetime
-```
-
-Constraints:
-
-- Capacity must be 0–1,000,000 kg.
-- Missing dates are treated as zero capacity in optimization and visibly flagged to the operator.
-
-### WeatherSnapshot
-
-Stores normalized or raw BMKG weather data for fallback.
-
-```text
-WeatherSnapshot
-- id: str, primary key
-- adm4_code: str
-- fetched_at: datetime
-- analysis_date: datetime | null
-- valid_from: datetime | null
-- valid_to: datetime | null
-- source_status: enum("LIVE", "CACHE")
-- normalized_json: str
-- raw_payload_json: str
-```
-
-Rules:
-
-- Keep the newest successful snapshot per administrative code.
-- Cached data must display its timestamp.
-- Weather older than 24 hours is marked stale but may still be displayed for demo fallback.
-- A stale cache must not block analysis.
-
-### AnalysisRun
-
-Immutable snapshot of one complete risk and optimization calculation.
-
-```text
-AnalysisRun
-- id: str, primary key
-- parent_run_id: str | null, foreign key -> AnalysisRun.id
-- scenario_name: str
-- created_at: datetime
-- horizon_start: date
-- horizon_end: date
-- risk_score: float
-- risk_level: enum("LOW", "MEDIUM", "HIGH", "CRITICAL")
-- total_supply_kg: float
-- compatible_demand_kg: float
-- allocated_kg: float
-- unallocated_kg: float
-- unallocated_supply_rate: float
-- demand_fulfillment_rate: float
-- solver_status: enum("OPTIMAL", "FEASIBLE_FALLBACK", "NO_DATA", "FAILED")
-- weather_status: enum("LIVE", "CACHE", "UNAVAILABLE")
-- input_snapshot_json: str
-- risk_breakdown_json: str
-- result_snapshot_json: str
-- error_message: str | null
-
-Relationships:
-- has_many: Allocation
-- optionally belongs_to: parent AnalysisRun
-```
-
-Rules:
-
-- Analysis runs are immutable after creation.
-- Scenario runs reference their base run through `parent_run_id`.
-- A failed run stores the error but must not overwrite the last successful run.
-
-### Allocation
-
-Stores one optimizer result assigning part of a batch to one buyer demand on a delivery date.
-
-```text
-Allocation
-- id: str, primary key
-- analysis_run_id: str, foreign key -> AnalysisRun.id
-- harvest_batch_id: str, foreign key -> HarvestBatch.id
-- buyer_demand_id: str, foreign key -> BuyerDemand.id
-- delivery_date: date
-- allocated_quantity_kg: float
-- distance_km_snapshot: float
-- allocation_reason_json: str
-- created_at: datetime
-
-Relationships:
-- belongs_to: AnalysisRun
-- belongs_to: HarvestBatch
-- belongs_to: BuyerDemand
-```
-
-Constraints:
-
-- Allocated quantity must be greater than 0.
-- Total allocations from one batch cannot exceed its quantity.
-- Total allocations to one demand cannot exceed requested quantity.
-- Grade must be accepted by the demand.
-- Delivery must not occur before harvest or after the buyer deadline.
-- Total allocations on a date cannot exceed aggregate distribution capacity for that date.
-
-### Relationship summary
-
-```text
-CooperativeProfile 1
-
-Farmer 1 ───< HarvestBatch
-
-Buyer 1 ───< BuyerDemand
-
-AnalysisRun 1 ───< Allocation
-
-HarvestBatch 1 ───< Allocation >─── 1 BuyerDemand
-
-AnalysisRun 1 ───< AnalysisRun
-(base run)          (scenario runs)
-```
+- FastAPI
+- Flask
+- Django
+- SQLAlchemy
+- Alembic
+- External databases
+- Separate frontend frameworks
+- New dependencies unless a P0 function cannot be implemented with the current stack
 
 ---
 
-## 5. Tech Stack
+## 7. Architecture Rules
 
-The implementation must use this stack unless the user explicitly approves a change.
+Use a modular monolith:
 
-- **Language:** Python 3.12.
-- **Frontend:** Streamlit multipage application.
-- **Backend:** Same-process modular Python service layer; no separate HTTP backend.
-- **Database:** SQLite through Python's standard-library `sqlite3`.
-- **Schema validation:** Pydantic.
-- **Data processing:** pandas and NumPy.
-- **Optimization:** `scipy.optimize.linprog` using the HiGHS solver.
-- **Charts:** Plotly.
-- **External HTTP:** httpx.
-- **Testing:** pytest and Streamlit's built-in testing utilities where practical.
-- **Lint and formatting:** Ruff.
-- **Auth:** None in v1.
-- **Hosting/deploy:** Streamlit Community Cloud from a public GitHub repository.
-- **Local fallback:** `streamlit run app.py`.
-- **Secrets:** `.streamlit/secrets.toml` locally and Streamlit Cloud secrets in deployment. No secret may be committed.
-- **Weather source:** Official BMKG public forecast API.
-- **Timezone:** `Asia/Jakarta`.
-- **Package management:** `requirements.txt` with pinned versions for the hackathon submission.
-
-### Architecture decision
-
-Use a **modular monolith**:
-
-```text
 Streamlit UI
-    ↓
+↓
 Application services
-    ├── Harvest service
-    ├── Buyer service
-    ├── Risk engine
-    ├── Allocation optimizer
-    ├── Scenario service
-    └── Weather adapter
-    ↓
+├── Harvest management
+├── Buyer and capacity management
+├── Risk engine
+├── Allocation optimizer
+├── Scenario service
+└── Weather adapter
+↓
 Repository layer
-    ↓
+↓
 SQLite
-```
 
 Hard rules:
 
 - UI pages must not contain SQL.
-- UI pages must not implement risk or optimization formulas.
+- UI pages must not contain risk formulas.
+- UI pages must not build optimization matrices.
 - Services must not import Streamlit.
-- The weather adapter is the only module allowed to understand the BMKG response shape.
-- The SQLite repository is the only module allowed to execute application SQL.
-- Domain calculations must be deterministic for identical inputs.
+- Repositories own application SQL.
+- BMKG adapter is the only module that understands upstream BMKG response structure.
+- Identical inputs must produce identical risk and allocation results.
+- Session state is temporary UI state only.
+- SQLite remains the canonical operational store.
+- User-facing text must use centralized translation keys.
+- Raw exceptions must not be displayed to users.
 
 ---
 
-## 6. Screens / UI
+## 8. Existing Phase 1 Foundation
 
-### Locked visual system
+The following implementation is complete and must be reused rather than rebuilt:
 
-- **Primary / Dark Green:** `#145319` — Deep Forest
-- **Secondary / Light Green:** `#388E3C` — Vibrant Leaf
-- **Accent / Warning Orange:** `#D97706` — Amber Earth
-- **App Background:** `#F1F5F0` — Soft Sage Mist
-- **Surface / Card Background:** `#FFFFFF` — Crisp White
-- **Primary Text:** `#1A2E1A` — Dark Moss
+### Canonical tables
 
-Risk and state information must never depend on color alone. Additional error and neutral colors may be introduced only when necessary and must maintain readable contrast.
+- schema_metadata
+- cooperative_profiles
+- farmers
+- harvest_batches
+- buyers
+- buyer_demands
+- distribution_capacities
+- weather_snapshots
+- analysis_runs
+- allocations
 
-### Global shell
+### Existing domain models
 
-Header content:
+- CooperativeProfile
+- Farmer
+- HarvestBatch
+- Buyer
+- BuyerDemand
+- DistributionCapacity
+- WeatherSnapshot
+- AnalysisRun
+- Allocation
 
-- Indonesian: `MimpiTani`.
-- English: `MimpiTani (Farmers' Dream)`.
-- Prototype badge.
-- `ID | EN` language switcher.
+### Existing capabilities
 
-Global prototype banner:
+- Idempotent schema initialization.
+- Parameterized repositories.
+- Deterministic Demo workspace.
+- Empty workspace.
+- Atomic reset.
+- Canonical data version.
+- Immutable analysis-run repository interface.
+- Deterministic seed data.
+- Bilingual workspace shell.
 
-- ID: `Data panen, buyer, dan kapasitas pada prototype ini adalah simulasi.`
-- EN: `Harvest, buyer, and capacity data in this prototype are simulated.`
+### Deterministic Demo baseline
 
-Weather badge must show one of:
+- Cooperative profiles: 1
+- Farmers: 30
+- Harvest batches: 42
+- Buyers: 8
+- Buyer demands: 16
+- Distribution-capacity records: 7
+- Weather snapshots: 0
+- Analysis runs: 0
+- Allocations: 0
 
-- `BMKG Live`;
-- `Cache BMKG / BMKG Cache` with timestamp;
-- `Cuaca Tidak Tersedia / Weather Unavailable`.
+Totals:
 
-### Welcome state — Workspace Choice
+- Planned supply: 12,600.0 kg
+- Open demand: 2,760.0 kg
+- Distribution capacity: 4,350.0 kg
 
-**Purpose:** Let the operator consciously choose between a deterministic demo and an empty workspace.
+Do not redesign the Phase 1 schema unless a real P0 defect requires a minimal migration.
 
-**Elements:** Product identity, short explanation, language switcher, `Muat Data Demo / Load Demo Data`, `Mulai Kosong / Start Empty`, and simulation disclaimer.
+---
 
-**States:** Initial, initializing, initialization failed, initialized and redirecting.
+## 9. Screen Requirements
 
-### Screen 1 — Radar Surplus / Surplus Radar
+## 9.1 Radar Surplus / Surplus Radar
 
-**Purpose:** Give the operator an immediate seven-day view of upcoming supply, market absorption, logistics constraints, and critical surplus risk.
+### Purpose
 
-**Elements:**
+Show the cooperative's seven-day supply, compatible demand, transport capacity, surplus exposure, and risk.
 
-- App title and pilot label.
-- Data-provenance banner:
-  - simulated harvest and buyer data;
-  - live, cached, or unavailable BMKG status.
-- Date-range selector fixed to a maximum 7-day visible horizon.
-- KPI cards:
-  - total expected harvest;
-  - compatible confirmed demand;
-  - potential surplus;
-  - operationally constrained surplus;
-  - risk level.
-- Daily chart containing:
-  - expected harvest;
+### P0 elements
+
+- Cooperative and pilot identity.
+- Seven-day horizon.
+- Total expected harvest.
+- Compatible buyer demand.
+- Potential surplus.
+- Operationally constrained surplus.
+- Risk score.
+- Risk level.
+- Daily Plotly chart:
+  - supply;
   - compatible demand;
-  - transport capacity.
-- Critical-date card.
-- Plain-language risk explanation.
-- Top three recommended actions.
-- Button: `Jalankan Analisis & Alokasi / Run Analysis & Allocation`.
-- Link/button to load demo data when the workspace is empty.
+  - capacity.
+- Critical date.
+- Top risk factors.
+- Plain-language explanation.
+- Top recommended actions.
+- Weather status.
+- Simulated-data label.
+- Run Analysis and Allocation button.
 
-**States:**
+### States
 
-- **Empty:** Explain that no harvest plan exists and provide `Muat Data Demo / Load Demo Data` and `Tambah Rencana Panen / Add Harvest Plan`.
-- **Loading:** Skeleton or spinner with the exact task, for example `Menghitung risiko surplus...`.
-- **Success:** Show metrics, chart, explanation, and source timestamps.
-- **Partial data:** Show warning when buyer demand, transport capacity, or weather is missing.
-- **Error:** Keep the page usable, show a concise error, and offer retry or navigation to the relevant data screen.
+- Empty harvest data.
+- Missing demand.
+- Missing capacity.
+- Weather unavailable.
+- Successful analysis.
+- Analysis failure.
 
-### Screen 2 — Rencana Panen / Harvest Plans
+No harvest data must show an empty state, not a misleading low-risk score.
 
-**Purpose:** Maintain upcoming harvest estimates from cooperative members.
+---
 
-**Elements:**
+## 9.2 Rencana Panen / Harvest Plans
 
-- Search and filters by farmer, date, grade, confidence, and status.
-- Harvest table.
-- `Tambah Rencana Panen` form.
-- Edit action.
+### P0 elements
+
+- Current harvest table.
+- Farmer name.
+- Harvest date.
+- Quantity.
+- Grade.
+- Confidence.
+- Status.
+- Add form.
+- Edit form or edit mode.
 - Cancel action with confirmation.
-- CSV upload.
-- CSV-template download.
-- Import preview showing valid rows and row-level errors.
-- Demo-seed button when appropriate.
-- Summary of total planned quantity in the active horizon.
+- Planned-quantity summary.
+- Basic filters where inexpensive.
 
-**States:**
+### Required validation
 
-- **Empty:** Explain the required fields and show manual-add, CSV-import, and demo-data actions.
-- **Uploading:** Show file name and parsing progress.
-- **Validation failure:** Keep valid and invalid rows separate; do not insert any row until the operator confirms a valid batch import.
-- **Partial import:** Allowed only after explicit confirmation; invalid rows remain downloadable as an error CSV.
-- **Database error:** Do not lose typed form data; show retry.
+- Farmer must exist and be active.
+- Quantity must be finite and greater than zero.
+- Quantity must not exceed 100,000 kg.
+- Date must be valid.
+- Grade must be A, B, or C.
+- Confidence must be LOW, MEDIUM, or HIGH.
+- Cancelled harvests remain stored but are excluded from current analysis.
+- User-facing failures use safe translated messages.
 
-### Screen 3 — Buyer & Kapasitas / Buyers & Capacity
+### P1 CSV support
 
-**Purpose:** Define where harvest can go and how much can be transported.
+When time permits:
 
-**Elements:**
+- Downloadable CSV template.
+- Upload.
+- Preview.
+- Row-level validation.
+- Deterministic duplicate fingerprint.
+- Atomic import by default.
+- Maximum 1,000 rows.
 
-- Buyer table with channel and distance.
-- Demand table with quantity, accepted grades, deadline, priority, and status.
-- Add/edit buyer form.
-- Add/edit/close demand form.
-- Seven-day transport-capacity editor.
-- Validation summary showing:
-  - demand with no accepted grades;
-  - deadlines outside the planning horizon;
-  - missing capacity dates.
-- Compatibility preview by grade.
-
-**States:**
-
-- **Empty buyers:** Explain that surplus cannot be allocated without demand.
-- **Empty capacity:** Warn that optimization treats missing capacity as zero.
-- **Invalid deadline:** Prevent save and explain the valid date range.
-- **No compatible grade:** Save is allowed only if at least one grade is selected.
-- **Error:** Keep unsaved form state and provide retry.
-
-### Screen 4 — Analisis & Simulasi / Analysis & Simulation
-
-**Purpose:** Run the risk engine and optimizer, inspect the allocation result, and compare a what-if scenario with the base plan.
-
-**Elements:**
-
-- Analysis controls:
-  - horizon;
-  - run-analysis button;
-  - last-run timestamp.
-- Risk score and level.
-- Factor-contribution breakdown.
-- Solver-status badge.
-- Allocation table:
-  - harvest batch;
-  - farmer;
-  - buyer;
-  - channel;
-  - delivery date;
-  - allocated kilograms;
-  - reason.
-- Unallocated-batch table.
-- Unmet-demand table.
-- Metrics:
-  - allocated kilograms;
-  - unallocated supply rate;
-  - demand-fulfillment rate.
-- Scenario editor:
-  - add temporary buyer demand;
-  - modify temporary transport capacity;
-  - move a temporary harvest date.
-- `Jalankan Skenario`.
-- Before/after comparison.
-- `Simpan Snapshot Skenario`.
-- Clear disclaimer that the result is advisory and based partly on simulated data.
-
-**States:**
-
-- **No analysis:** Explain prerequisites and show missing-data checklist.
-- **Running:** Show risk-calculation and optimization steps separately.
-- **Optimal:** Display full result.
-- **No feasible allocation:** Display why, retain risk result, and suggest specific data changes.
-- **Optimizer failure:** Use a documented greedy fallback and mark status as `FEASIBLE_FALLBACK`; never present fallback as optimal.
-- **Scenario unchanged:** Explain that the scenario did not modify any effective constraint.
-- **Stale base run:** Warn when canonical data changed after the base run and require a new base analysis.
+CSV work must not delay manual CRUD, risk, optimizer, or deployment.
 
 ---
 
-## 7. API / Data Contracts
-
-MimpiTani is a single-process application and has no internal HTTP API. Contracts between UI, services, and repositories must use Pydantic models. The only network contract is the BMKG weather API.
-
-### Internal translation contract
-
-All user-facing text must use centralized keys such as:
-
-```python
-t("nav.radar")
-t("action.run_analysis")
-t("state.empty.harvest")
-t("risk.level.high")
-```
-
-Files:
-
-```text
-src/i18n/id.json
-src/i18n/en.json
-```
-
-Rules:
-
-- Both dictionaries have identical key sets.
-- Missing keys fail automated tests.
-- Page modules do not hard-code user-facing strings.
-- Names, locations, identifiers, and user-entered text are not translated.
-
-### External BMKG contract
-
-**Endpoint**
-
-```text
-GET https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4={administrative_level_iv_code}
-```
-
-Official reference: `https://data.bmkg.go.id/prakiraan-cuaca/`
-
-**Timeout:** 3 seconds.
-
-**Retry:** No automatic repeated retry during a Streamlit rerun. The operator may manually retry. This prevents a slow API from blocking every page render.
-
-**Fields consumed after normalization:**
-
-```json
-{
-  "adm4_code": "33.xx.xx.xxxx",
-  "analysis_date": "2026-07-16T00:00:00Z",
-  "points": [
-    {
-      "local_datetime": "2026-07-16 13:00:00",
-      "temperature_c": 29,
-      "humidity_percent": 78,
-      "weather_description": "Hujan Ringan",
-      "wind_speed_kmh": 8
-    }
-  ],
-  "source_status": "LIVE"
-}
-```
-
-The adapter must tolerate additional upstream fields and isolate nesting changes from the rest of the application.
-
-### Internal contract — analysis input
-
-```json
-{
-  "horizon_start": "2026-07-17",
-  "horizon_end": "2026-07-23",
-  "harvest_batches": [
-    {
-      "id": "uuid",
-      "farmer_id": "uuid",
-      "harvest_date": "2026-07-18",
-      "quantity_kg": 500.0,
-      "grade": "B",
-      "confidence": "MEDIUM"
-    }
-  ],
-  "buyer_demands": [
-    {
-      "id": "uuid",
-      "buyer_id": "uuid",
-      "quantity_kg": 300.0,
-      "accepted_grades": ["A", "B"],
-      "required_by_date": "2026-07-19",
-      "priority": 2,
-      "distance_km": 18.0
-    }
-  ],
-  "distribution_capacity": [
-    {
-      "date": "2026-07-18",
-      "capacity_kg": 1000.0
-    }
-  ],
-  "weather": {
-    "status": "LIVE",
-    "daily_disruption_scores": {
-      "2026-07-18": 0.4
-    }
-  }
-}
-```
-
-### Internal contract — risk result
-
-```json
-{
-  "score": 72.5,
-  "level": "HIGH",
-  "critical_dates": ["2026-07-18"],
-  "factors": [
-    {
-      "code": "SUPPLY_DEMAND_GAP",
-      "label": "Kesenjangan supply dan demand",
-      "raw_value": 0.48,
-      "weighted_points": 21.6,
-      "explanation": "Permintaan kompatibel hanya menyerap 52% panen."
-    }
-  ],
-  "weather_status": "LIVE",
-  "warnings": []
-}
-```
-
-### Risk-engine formula
-
-The score is deterministic and clamped to 0–100.
-
-```text
-risk_score =
-    45 × supply_demand_gap_ratio
-  + 20 × harvest_concentration_ratio
-  + 15 × transport_capacity_gap_ratio
-  + 10 × weather_disruption_score
-  + 10 × estimate_uncertainty_score
-```
-
-Definitions:
-
-```text
-supply_demand_gap_ratio =
-max(0, total_supply - compatible_demand) / max(total_supply, 1)
-
-harvest_concentration_ratio =
-largest_single_day_supply / max(total_supply, 1)
-
-transport_capacity_gap_ratio =
-sum(max(0, daily_supply - daily_transport_capacity))
-/ max(total_supply, 1)
-
-weather_disruption_score =
-average normalized disruption score for available forecast dates;
-0 when unavailable, with an explicit warning
-
-estimate_uncertainty_score =
-weighted average of:
-HIGH = 0.0
-MEDIUM = 0.5
-LOW = 1.0
-```
-
-Risk levels:
-
-```text
-0–24.99   LOW
-25–49.99  MEDIUM
-50–74.99  HIGH
-75–100    CRITICAL
-```
-
-### Internal contract — optimizer result
-
-```json
-{
-  "status": "OPTIMAL",
-  "objective_value": 1432.8,
-  "allocations": [
-    {
-      "harvest_batch_id": "uuid",
-      "buyer_demand_id": "uuid",
-      "delivery_date": "2026-07-18",
-      "quantity_kg": 250.0,
-      "reason_codes": [
-        "GRADE_COMPATIBLE",
-        "DEADLINE_FEASIBLE",
-        "SHORT_DISTANCE"
-      ]
-    }
-  ],
-  "allocated_kg": 250.0,
-  "unallocated_kg": 250.0,
-  "unmet_demand_kg": 50.0,
-  "warnings": []
-}
-```
-
-### Optimizer constraints
-
-For each decision variable representing kilograms from a batch to a demand on a delivery date:
-
-1. Allocation must be non-negative.
-2. Total allocated from a batch cannot exceed batch quantity.
-3. Total allocated to a demand cannot exceed requested quantity.
-4. Batch grade must be accepted by the demand.
-5. Delivery date must be on or after harvest date.
-6. Delivery date must be on or before buyer deadline.
-7. Total allocation on a date cannot exceed that date's transport capacity.
-8. Cancelled batches, closed demands, and inactive buyers are excluded.
-
-### Optimizer objective order
-
-The implementation uses one linear objective with clearly documented penalties:
-
-1. Strongly penalize unallocated supply.
-2. Penalize unmet high-priority demand.
-3. Penalize later delivery for urgent batches.
-4. Penalize longer distance.
-5. Do not include speculative future prices in the objective.
-
-If `linprog` fails, a deterministic greedy fallback may allocate urgent compatible batches to the earliest-deadline demand while respecting capacity. The result must be labeled `FEASIBLE_FALLBACK`, not `OPTIMAL`.
-
----
-
-## 8. Non-Functional Requirements
-
-### Scale
-
-The v1 prototype must support:
-
-- 1 cooperative.
-- 1 commodity.
-- Up to 30 active farmers in the seeded demo.
-- Up to 1,000 stored harvest batches.
-- Up to 100 buyers.
-- Up to 500 open buyer-demand records.
-- Up to 14 days of active planning data.
-- Up to 5,000 optimizer decision variables in one run.
-
-No concurrency guarantee is required beyond a small public hackathon demo. The application should warn that concurrent edits from several browser sessions may overwrite assumptions and are not production-safe.
-
-### Offline behavior
-
-When running locally without internet:
-
-- Harvest CRUD works.
-- Buyer and demand CRUD works.
-- Distribution-capacity editing works.
-- Risk calculation works.
-- Optimization works.
-- Scenario comparison works.
-- The application uses cached weather when available.
-- If no weather is available, weather contributes zero points and the UI displays `Cuaca tidak tersedia`.
-
-The deployed cloud version may hibernate or restart. Canonical demo data must be recoverable from seed files.
-
-### Performance
-
-Measured on the seeded demo dataset:
-
-- Initial Radar render: under 2 seconds, excluding a first cold deployment start.
-- Risk calculation: under 500 ms.
-- Optimization run: under 3 seconds for the declared v1 scale.
-- CSV validation and preview: under 2 seconds for 1,000 rows.
-- BMKG request timeout: 3 seconds.
-- No external request may execute on every Streamlit widget rerun when cached data is still valid.
-
-### Reliability
-
-- Database initialization must be idempotent.
-- A failed analysis must not delete the last successful analysis.
-- Weather failure must not fail the application.
-- Resetting demo data requires confirmation.
-- All write operations use transactions.
-- CSV import is atomic by default.
-- Generated SQLite files and weather caches are not committed to version control.
-
-### Security and privacy
-
-- No authentication in v1.
-- Only simulated or non-sensitive demo data may be deployed publicly.
-- Do not store NIK, phone number, bank information, credentials, or exact household addresses.
-- Validate all input server-side through Pydantic.
-- Use parameterized SQL only.
-- Never construct SQL with user-supplied string interpolation.
-- Secrets must not appear in source, logs, screenshots, fixtures, or committed files.
-- Error messages shown to users must not expose stack traces or file-system paths.
-
-### Accessibility, bilingual UX, and responsiveness
-
-- Default UI language is Bahasa Indonesia.
-- English is complete, not partial.
-- Language preference persists for the active session.
-- Primary target is a 1366×768 judging laptop.
-- The layout remains usable on tablet and mobile widths.
-- KPI cards stack on narrow screens.
-- Scenario comparison stacks vertically on mobile.
-
-- Do not communicate risk through color alone; always pair color with text and iconography.
-- All form controls have visible labels.
-- Tables remain understandable without hover.
-- Minimum body-text size: 14 px equivalent.
-- Primary actions use explicit verbs.
-- Technical solver terminology is confined to an expandable technical-details section.
-- The interface must be usable with keyboard navigation to the extent supported by Streamlit.
-
-### Data provenance
-
-Every analytical screen must distinguish:
-
-- `Simulasi` for seeded or manually created demo data.
-- `BMKG Live` for live weather.
-- `Cache BMKG` with timestamp.
-- `Estimasi` for potential impact metrics.
-
-The UI must never imply that simulated allocations were executed in the real world.
-
----
-
-## 9. Edge Cases & Error States
-
-### Data availability
-
-- **No harvest batches:** Show zero-state guidance; do not calculate a misleading low-risk score.
-- **Harvest exists but no buyer demand:** Show high absorption gap, explain that no confirmed demand is available, and allow risk analysis without optimization.
-- **Buyer demand exceeds supply:** Allocate available supply; show unmet demand without calling it surplus.
-- **No distribution-capacity record:** Treat missing capacity as zero and show a blocking warning before optimization.
-- **All capacity is zero:** Risk analysis still runs; optimizer returns no allocations and explains the capacity constraint.
-- **No compatible buyer grade:** Keep harvest unallocated and explain grade incompatibility.
-- **All harvest is outside the selected horizon:** Show an empty-period state rather than a global zero.
-- **Cancelled batch:** Exclude it from new analysis but retain it in historical snapshots.
-- **Closed demand:** Exclude it from new analysis.
-
-### Input validation
-
-- Reject zero, negative, NaN, or infinite quantities.
-- Reject invalid dates and deadlines.
-- Reject harvest dates after buyer deadlines during manual allocation.
-- Reject an empty accepted-grade set.
-- Reject distance below 0 or above 1,000 km.
-- Normalize decimal separators from valid CSV formats where safe; otherwise report a row error.
-- Trim surrounding whitespace.
-- Do not silently coerce unknown enum values.
-- Detect duplicate CSV rows using a deterministic import fingerprint.
-- Do not partially insert a CSV unless the operator explicitly chooses `Impor baris valid saja`.
-
-### Weather
-
-- **Timeout:** Use newest cache.
-- **HTTP error:** Use newest cache.
-- **Malformed response:** Log the adapter error and use cache.
-- **Stale cache:** Display cache age and continue.
-- **No cache:** Continue with weather status `UNAVAILABLE`.
-- **Forecast does not cover all seven days:** Use weather only for covered dates; do not extrapolate.
-
-### Optimizer
-
-- **No feasible allocation:** Return a valid result with zero or partial allocations and constraint explanations.
-- **Solver error:** Run deterministic greedy fallback and label it clearly.
-- **Unbounded or malformed model:** Treat as a bug, store a failed run, and show a concise user error.
-- **Floating-point residue:** Quantities below 0.001 kg are rounded to zero.
-- **Rounding:** Display one decimal kilogram but keep higher precision internally.
-- **Scenario input produces no change:** Do not create a duplicate run unless the user explicitly saves it.
-- **Canonical data changed after base run:** Mark the base run stale.
-
-### Database and deployment
-
-- **Missing database:** Initialize schema and offer seed loading.
-- **Corrupt database:** Do not overwrite automatically; show recovery instructions and allow reset only after confirmation.
-- **Database locked:** Retry once with a short bounded delay, then preserve form state and show an error.
-- **Cloud restart:** Reinitialize from schema; demo seed remains available.
-- **Concurrent edit:** Last-write behavior is acceptable for v1, but updated timestamps must make the overwrite visible.
-- **Deployment unavailable:** Localhost and the prerecorded demo remain valid fallbacks.
-
----
-
-## 10. Acceptance Criteria
-
-### Application shell, workspace, and navigation
-
-- [ ] The app starts with `streamlit run app.py` on Python 3.12 without uncaught exceptions.
-- [ ] First initialization offers Demo and Empty choices.
-- [ ] Demo choice loads deterministic seeded data.
-- [ ] Empty choice loads no operational records.
-- [ ] Default language is Bahasa Indonesia.
-- [ ] `ID | EN` changes all user-facing application text.
-- [ ] Language selection persists for the active browser session.
-- [ ] Indonesian product title is `MimpiTani`.
-- [ ] English product title is `MimpiTani (Farmers' Dream)`.
-- [ ] The sidebar exposes exactly four primary screens in both languages.
-- [ ] The UI clearly labels the project as a prototype using simulated operational data.
-- [ ] Translation dictionaries contain identical key sets.
-
-### Visual system
-
-- [ ] Primary green is `#145319`.
-- [ ] Secondary green is `#388E3C`.
-- [ ] Warning orange is `#D97706`.
-- [ ] App background is `#F1F5F0`.
-- [ ] Card background is `#FFFFFF`.
-- [ ] Primary text is `#1A2E1A`.
-- [ ] Risk states include text in addition to color.
-- [ ] The primary workflow is usable at 1366×768.
-- [ ] The four primary screens remain usable at tablet and mobile widths.
-
-### Database and seed
-
-- [ ] Starting with no database creates all tables idempotently.
-- [ ] Loading the demo seed creates the cooperative profile, farmers, harvest batches, buyers, demands, and capacity records.
-- [ ] Reset requires explicit confirmation.
-- [ ] Reset produces the same deterministic seeded records and metrics each time.
-- [ ] No generated `.db` file is tracked by Git.
-
-### Harvest management
-
-- [ ] A valid manual harvest record can be created and appears in the table and Radar totals.
-- [ ] An existing planned harvest can be edited.
-- [ ] Cancelling a harvest removes it from current analysis without deleting historical records.
-- [ ] Invalid quantities, grades, confidence values, and dates are rejected with field-level messages.
-- [ ] A valid CSV of up to 1,000 rows can be previewed and imported.
-- [ ] Invalid CSV rows are reported with row number, field, and reason.
-- [ ] Duplicate CSV rows are not silently inserted.
-
-### Buyer-demand management
-
-- [ ] A buyer can be created with name, channel, location, and distance.
-- [ ] A demand can be created with quantity, deadline, priority, and at least one accepted grade.
-- [ ] A demand can be closed and is excluded from new analysis.
-- [ ] Grade compatibility is visible before optimization.
-- [ ] Invalid quantity, distance, deadline, and grade input is rejected.
+## 9.3 Buyer & Kapasitas / Buyers & Capacity
+
+### Buyers
+
+P0 operations:
+
+- Create.
+- Edit.
+- Deactivate.
+- List.
+
+Fields:
+
+- Name.
+- Channel.
+- Location.
+- Distance.
+
+Channels:
+
+- TRADITIONAL_MARKET
+- RETAILER
+- RESTAURANT
+- PROCESSOR
+
+Validation:
+
+- Name and location are required.
+- Distance is between 0 and 1,000 km.
+- Inactive buyers are excluded from new analysis.
+
+### Buyer demands
+
+P0 operations:
+
+- Create.
+- Edit.
+- Close.
+- List.
+
+Fields:
+
+- Buyer.
+- Quantity.
+- Accepted grades.
+- Required-by date.
+- Priority.
+
+Validation:
+
+- Quantity must be greater than zero.
+- At least one accepted grade is required.
+- Priority is 1, 2, or 3.
+- Priority 3 is highest.
+- Closed demands are excluded from new optimization.
+- Buyer must be active when creating new demand.
 
 ### Distribution capacity
 
-- [ ] The operator can enter aggregate capacity for each day in the seven-day horizon.
-- [ ] Missing capacity dates are visibly flagged.
-- [ ] Missing capacity is treated as zero by the optimizer.
-- [ ] Capacity changes affect a subsequent optimization result.
+P0 operations:
 
-### Radar
+- Show seven dates.
+- Enter or update capacity for each date.
+- Save through repository/service.
+- Flag missing dates.
 
-- [ ] The Radar shows total supply, compatible demand, potential surplus, operationally constrained surplus, and risk level.
-- [ ] The daily chart shows supply, demand, and transport capacity for the selected horizon.
-- [ ] The highest-risk date is identified when data exists.
-- [ ] With no harvest data, the Radar displays an empty state rather than a risk score.
-- [ ] The Radar displays data-source status and timestamps.
+Rules:
 
-### Risk engine
-
-- [ ] Identical input produces identical score, level, critical dates, and factor breakdown.
-- [ ] Each factor's weighted points sum to the final score within floating-point tolerance.
-- [ ] Scores are clamped to 0–100.
-- [ ] Threshold boundaries map correctly to Low, Medium, High, and Critical.
-- [ ] Missing weather does not crash calculation and produces an explicit warning.
-- [ ] Plain-language explanations identify at least the top three non-zero factors in the selected language.
-
-### BMKG integration
-
-- [ ] A valid administrative code can retrieve and normalize official BMKG data.
-- [ ] The application visibly credits BMKG.
-- [ ] A request timeout falls back to cache.
-- [ ] Malformed live data falls back to cache.
-- [ ] When neither live nor cached data exists, core analysis still completes.
-- [ ] Tests do not make live BMKG requests.
-
-### Allocation optimizer
-
-- [ ] A batch can be split across multiple compatible buyer demands.
-- [ ] No batch is overallocated.
-- [ ] No demand is overfulfilled.
-- [ ] No allocation violates accepted grade.
-- [ ] No allocation is delivered before harvest or after deadline.
-- [ ] Daily allocation never exceeds transport capacity.
-- [ ] The result exposes allocated kilograms, unallocated kilograms, unmet demand, and solver status.
-- [ ] A controlled solver failure invokes the greedy fallback and marks the result `FEASIBLE_FALLBACK`.
-- [ ] Results marked `OPTIMAL` originate only from a successful optimizer result.
-
-### Scenario simulation
-
-- [ ] A temporary buyer-demand increase can be simulated without modifying canonical records.
-- [ ] A temporary capacity change can be simulated without modifying canonical records.
-- [ ] A temporary harvest-date change can be simulated without modifying canonical records.
-- [ ] Before and after metrics are displayed side by side.
-- [ ] Saving a scenario creates an immutable AnalysisRun linked to its base run.
-- [ ] A scenario with no effective change is identified.
-
-### Error handling and accessibility
-
-- [ ] User-facing errors contain an actionable message and no stack trace.
-- [ ] Form input remains available after a recoverable database or network error.
-- [ ] Risk is communicated with text in addition to color.
-- [ ] Every input has a visible label.
-- [ ] Empty, loading, success, partial-data, and error states exist for each primary screen.
-- [ ] The complete seeded demo can be performed without internet using cached or unavailable weather mode.
-
-### Performance and quality
-
-- [ ] Risk calculation meets the target on seeded data.
-- [ ] Optimization completes within 3 seconds at the declared v1 scale.
-- [ ] `pytest` passes.
-- [ ] `ruff check .` passes.
-- [ ] `ruff format --check .` passes.
-- [ ] The deployed app starts from a clean Git checkout using only documented commands.
+- Capacity is zero or greater.
+- Missing capacity is treated as zero.
+- No vehicle or route entities.
 
 ---
 
-## 11. Build Order
+## 9.4 Analysis & Simulation
 
-Each phase must be independently verifiable. Do not start the next phase until the current phase's tests and acceptance criteria pass.
+### P0 base analysis
 
-### Phase 0 — Repository skeleton and deterministic configuration
+The screen must support:
 
-- Create folder structure.
-- Pin dependencies.
-- Configure Ruff and pytest.
-- Add app configuration, timezone, enums, and constants.
-- Add locked theme tokens and bilingual translation skeleton.
-- Add welcome choice and empty Streamlit navigation.
-- Add `.gitignore`.
-- Verification: app starts and all four screens render placeholders.
+- Seven-day horizon.
+- Run-analysis button.
+- Risk score and level.
+- Factor breakdown.
+- Solver status.
+- Allocation table.
+- Unallocated-harvest table.
+- Unmet-demand table.
+- Allocated kilograms.
+- Unallocated supply rate.
+- Demand-fulfillment rate.
+- Advisory disclaimer.
 
-### Phase 1 — Data contracts, SQLite schema, repositories, and demo seed
+### P0 scenarios
 
-- Implement Pydantic domain models.
-- Implement idempotent schema initialization.
-- Implement parameterized repository methods.
-- Implement seed and reset behavior.
-- Implement temporary-database tests.
-- Verification: seed loads deterministically and CRUD repository tests pass.
+At minimum support:
 
-### Phase 2 — Harvest management flow
+1. Add temporary buyer demand.
+2. Increase temporary daily capacity.
 
-- Build Rencana Panen screen.
-- Implement create/edit/cancel.
-- Implement CSV template, preview, validation, duplicate detection, and import.
-- Verification: manual and CSV acceptance criteria pass.
+Temporary changes:
 
-### Phase 3 — Buyer, demand, and transport-capacity flow
+- exist only in memory for calculation;
+- do not mutate canonical tables;
+- are clearly labeled;
+- are applied to a copy of the base analysis input.
 
-- Build Buyer & Kapasitas screen.
-- Implement buyer and demand CRUD.
-- Implement accepted-grade handling.
-- Implement seven-day capacity editor.
-- Verification: compatibility and validation tests pass.
+Show:
 
-### Phase 4 — Explainable risk engine
+- base metrics;
+- scenario metrics;
+- metric differences;
+- risk change;
+- allocated-quantity change;
+- unallocated-supply change;
+- demand-fulfillment change.
 
-- Implement normalized factor calculations.
-- Implement score and thresholds.
-- Implement critical-date logic.
-- Implement plain-language factor explanations.
-- Add deterministic unit tests including boundary cases.
-- Verification: risk acceptance criteria pass without Streamlit.
+### P1 scenario capability
 
-### Phase 5 — Allocation optimizer and fallback
+When time permits:
 
-- Build optimization input from repository data.
-- Implement linear-program matrix construction.
-- Implement solver-result normalization.
-- Implement deterministic greedy fallback.
-- Add invariant tests for all constraints.
-- Verification: optimizer tests prove no over-allocation, deadline, grade, or capacity violation.
+- Move a temporary harvest date.
+- Save immutable scenario snapshot.
+- Link scenario run to base run.
+- Show minimal analysis history.
 
-### Phase 6 — Radar screen
+Do not build a complex history-management screen.
 
-- Add KPI calculations.
-- Add daily chart.
-- Add data-provenance and partial-data warnings.
-- Add latest risk summary and critical dates.
-- Verification: seeded Radar matches known fixture totals.
+---
 
-### Phase 7 — Analysis and scenario simulation
+## 10. Risk Engine
 
-- Build analysis-run persistence.
-- Build allocation and exception views.
-- Implement temporary scenario changes.
-- Implement before/after comparison and saved snapshots.
-- Verification: scenarios change results without changing canonical records.
+The risk engine must be deterministic and independent from Streamlit.
 
-### Phase 8 — BMKG adapter and offline fallback
+### Formula
 
-- Implement external adapter.
-- Implement normalization.
-- Implement cache read/write.
-- Add live/cache/unavailable statuses.
-- Mock all network behavior in tests.
-- Verification: timeout, malformed response, stale cache, and no-cache tests pass.
+risk_score =
+45 × supply_demand_gap_ratio
 
-### Phase 9 — UX polish, accessibility, and demo hardening
+- 20 × harvest_concentration_ratio
+- 15 × transport_capacity_gap_ratio
+- 10 × weather_disruption_score
+- 10 × estimate_uncertainty_score
 
-- Implement all empty/loading/error states.
-- Verify complete Bahasa Indonesia and English labels.
-- Verify locked visual color tokens and responsive states.
-- Verify source labels and disclaimers.
-- Test 1366×768 layout.
-- Test full demo with and without internet.
-- Record known limitations.
-- Verification: manual demo checklist passes twice from a fresh reset.
+Clamp the result to 0–100.
 
-### Phase 10 — Deployment and submission freeze
+### Supply-demand gap
 
-- Deploy to Streamlit Community Cloud.
-- Verify clean install from GitHub.
-- Remove secrets and generated files.
-- Capture screenshots and demo backup.
-- Freeze new features.
-- Verification: public URL, local fallback, tests, lint, and demo reset all work.
+supply_demand_gap_ratio =
+max(0, total_supply - compatible_demand)
+/ max(total_supply, 1)
+
+### Harvest concentration
+
+harvest_concentration_ratio =
+largest_single_day_supply
+/ max(total_supply, 1)
+
+### Capacity gap
+
+transport_capacity_gap_ratio =
+sum(max(0, daily_supply - daily_capacity))
+/ max(total_supply, 1)
+
+### Weather disruption
+
+weather_disruption_score:
+
+- Average normalized score for available forecast dates.
+- Value between 0 and 1.
+- Use 0 when unavailable.
+- Add an explicit weather-unavailable warning.
+
+### Estimate uncertainty
+
+Confidence values:
+
+- HIGH = 0.0
+- MEDIUM = 0.5
+- LOW = 1.0
+
+Use a quantity-weighted average unless existing implementation contracts require an equivalent documented deterministic calculation.
+
+### Risk levels
+
+- 0.00–24.99: LOW
+- 25.00–49.99: MEDIUM
+- 50.00–74.99: HIGH
+- 75.00–100.00: CRITICAL
+
+### Risk result
+
+Expose:
+
+- score;
+- level;
+- total supply;
+- compatible demand;
+- daily values;
+- critical dates;
+- factor raw values;
+- weighted points;
+- weather status;
+- warnings;
+- translated explanation codes.
+
+### Critical date
+
+Use the date with the greatest operational surplus or highest documented daily-risk contribution.
+
+Tie-breaking must be deterministic, preferring the earliest date.
+
+### Explanations
+
+Generate explanations from translation keys.
+
+Show at least the top three non-zero factors when available.
+
+Do not use an LLM.
+
+---
+
+## 11. Allocation Optimizer
+
+Use scipy.optimize.linprog with HiGHS.
+
+### Decision variable
+
+Continuous kilograms allocated from:
+
+harvest batch → buyer demand → delivery date
+
+### Constraints
+
+1. Allocation is non-negative.
+2. A harvest batch cannot be overallocated.
+3. A demand cannot be overfulfilled.
+4. Harvest grade must be accepted.
+5. Delivery date must be on or after harvest date.
+6. Delivery date must be on or before demand deadline.
+7. Daily allocation cannot exceed transport capacity.
+8. Cancelled batches are excluded.
+9. Closed demands are excluded.
+10. Inactive buyers are excluded.
+11. Inactive farmers cannot contribute new harvest records.
+12. Tiny floating residue below 0.001 kg becomes zero.
+
+### Objective priority
+
+Use documented linear penalties in this order:
+
+1. Strongly minimize unallocated supply.
+2. Prefer higher-priority demand.
+3. Prefer earlier feasible delivery.
+4. Prefer shorter distance.
+5. Never include price or speculative revenue.
+
+### Result
+
+Expose:
+
+- status;
+- objective value;
+- allocations;
+- allocated kilograms;
+- unallocated kilograms;
+- unmet demand kilograms;
+- unallocated batches;
+- unmet demands;
+- warnings;
+- reason codes.
+
+### Statuses
+
+- OPTIMAL
+- FEASIBLE_FALLBACK
+- NO_DATA
+- FAILED
+
+Only a successful linprog result may be labeled OPTIMAL.
+
+### Greedy fallback
+
+On solver failure:
+
+- use deterministic ordering;
+- prioritize earlier deadlines;
+- then higher demand priority;
+- then shorter distance;
+- respect all quantity, date, grade, and capacity constraints;
+- label result FEASIBLE_FALLBACK.
+
+No fallback may violate an optimizer constraint.
+
+---
+
+## 12. Weather Integration
+
+Weather must never block the core demo.
+
+### P0 behavior
+
+Core risk and optimization must work with:
+
+weather_status = UNAVAILABLE
+
+When unavailable:
+
+- weather contributes zero risk points;
+- the UI shows Weather Unavailable / Cuaca Tidak Tersedia;
+- analysis continues;
+- BMKG is not falsely labeled live.
+
+### P1 BMKG adapter
+
+Implement when core workflow is stable:
+
+Endpoint:
+
+GET <https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4={adm4_code}>
+
+Timeout:
+
+- 3 seconds.
+
+Behavior:
+
+1. Attempt live request only when necessary.
+2. Normalize supported fields.
+3. Store successful snapshot.
+4. On timeout, HTTP failure, or malformed data:
+   - use newest compatible cache.
+5. Mark cache older than 24 hours stale.
+6. When no cache exists:
+   - return UNAVAILABLE.
+7. Never execute a live request on every Streamlit rerun.
+8. Tests must mock all network calls.
+
+### Timebox
+
+Do not spend more than 60 minutes debugging live BMKG structure.
+
+When live parsing remains unstable:
+
+- retain mocked adapter tests;
+- retain cache and unavailable behavior;
+- display the limitation;
+- continue to deployment.
+
+---
+
+## 13. Bilingual UI
+
+Languages:
+
+- ID
+- EN
+
+Default:
+
+- ID
+
+All core-demo text must be translated:
+
+- navigation;
+- page headings;
+- form labels;
+- validation messages;
+- success messages;
+- error messages;
+- risk levels;
+- risk explanations;
+- KPI labels;
+- scenario labels;
+- source badges;
+- disclaimers.
+
+Translation dictionaries must have identical key sets.
+
+Names, locations, identifiers, and user-entered content are not translated.
+
+Hard-coded user-facing strings inside pages are prohibited unless they are non-linguistic data values.
+
+---
+
+## 14. Visual and Accessibility Requirements
+
+Locked colors:
+
+- Primary: #145319
+- Secondary: #388E3C
+- Accent: #D97706
+- Background: #F1F5F0
+- Surface: #FFFFFF
+- Primary text: #1A2E1A
+
+P0 requirements:
+
+- Main workflow works at 1366×768.
+- No horizontal overflow.
+- KPI cards remain readable.
+- Forms have visible labels.
+- Risk status includes text, not color alone.
+- Tables remain understandable without hover.
+- Primary actions use explicit verbs.
+- User errors do not expose stack traces or paths.
+- Prototype banner is visible.
+- Simulated-data status is visible.
+- Allocation output is labeled advisory.
+
+Tablet and mobile layouts must remain usable, but pixel-perfect mobile polish is P1.
+
+---
+
+## 15. Error and Empty States
+
+### No harvest
+
+- Show guidance.
+- Do not calculate a low-risk score.
+
+### No demand
+
+- Show full absorption gap.
+- Risk may run.
+- Optimizer may return zero allocation.
+
+### No capacity
+
+- Treat missing dates as zero.
+- Show a blocking warning for allocation.
+
+### No compatible grade
+
+- Keep affected harvest unallocated.
+- Explain grade incompatibility.
+
+### Demand exceeds supply
+
+- Allocate available supply.
+- Show unmet demand.
+- Do not call the shortage a surplus.
+
+### Solver failure
+
+- Run deterministic fallback.
+- Mark FEASIBLE_FALLBACK.
+
+### Weather failure
+
+- Use cache.
+- Otherwise use UNAVAILABLE.
+- Continue analysis.
+
+### Database error
+
+- Show concise translated error.
+- Do not expose SQL, stack trace, or local file path.
+
+### Stale analysis
+
+When canonical data version differs from the analysis input version:
+
+- label the previous result stale;
+- require a new base analysis before saving a scenario.
+
+---
+
+## 16. Performance Targets
+
+On the seeded Demo dataset:
+
+- Initial Radar render: under 2 seconds after startup.
+- Risk calculation: under 500 ms.
+- Optimization: under 3 seconds.
+- CSV preview for 1,000 rows: under 2 seconds when CSV is implemented.
+- BMKG timeout: 3 seconds.
+
+Performance work must focus on visible judging delays, not premature micro-optimization.
+
+---
+
+## 17. Accelerated Execution Plan
+
+The old Phase 2–10 sequence is replaced by four execution waves.
+
+## Wave A — Operational Data UI
+
+Combines previous Phases 2 and 3.
+
+Maximum implementation time: 3 hours.
+
+Implement in this order:
+
+1. Harvest list.
+2. Manual harvest create.
+3. Harvest cancel.
+4. Harvest edit.
+5. Buyer list and create.
+6. Demand list and create.
+7. Seven-day capacity editor.
+8. Buyer/demand edit and state transitions.
+9. Basic filters.
+10. CSV only after manual flows work.
+
+Required verification:
+
+- Targeted model/service/page tests.
+- Create, edit, cancel, close, and deactivate smoke tests.
+- Full test suite once at wave completion.
+- Ruff check.
+
+Exit condition:
+
+The operator can modify supply, demand, and capacity through the UI without direct database editing.
+
+## Wave B — Decision Core
+
+Combines previous Phases 4 and 5.
+
+Maximum implementation time: 3.5 hours.
+
+Implement:
+
+1. Analysis input builder.
+2. Risk models.
+3. Five factor calculations.
+4. Score and threshold mapping.
+5. Critical-date calculation.
+6. Explanation codes.
+7. Optimization model.
+8. Result normalization.
+9. Greedy fallback.
+10. Invariant tests.
+
+Required verification:
+
+- Risk boundary tests.
+- Missing-data tests.
+- Optimizer invariant tests.
+- Controlled solver-failure test.
+- Performance check on seeded data.
+- Full test suite at wave completion.
+
+Exit condition:
+
+A deterministic service call produces a valid risk result and valid allocation result from seeded repository data.
+
+## Wave C — Complete Product Demo
+
+Combines previous Phases 6, 7, and 8.
+
+Maximum implementation time: 4 hours.
+
+Implement:
+
+1. Radar KPIs.
+2. Daily chart.
+3. Risk explanation.
+4. Critical-date view.
+5. Run-analysis action.
+6. Analysis result screen.
+7. Allocation table.
+8. Unallocated and unmet-demand tables.
+9. Temporary buyer-demand scenario.
+10. Temporary capacity scenario.
+11. Before-and-after comparison.
+12. Save snapshot only when inexpensive.
+13. Weather unavailable state.
+14. BMKG live/cache adapter only after core workflow works.
+
+Required verification:
+
+- Seeded Radar totals match fixture.
+- Base analysis runs from UI.
+- Scenario improves at least one expected metric.
+- Scenario does not mutate canonical data.
+- ID and EN core path.
+- Full test suite.
+
+Exit condition:
+
+The complete judging story can be demonstrated from Demo reset through scenario comparison.
+
+## Wave D — Hardening and Submission
+
+Combines previous Phases 9 and 10.
+
+Maximum code-polish time: 2 hours.
+
+Then freeze features.
+
+Tasks:
+
+1. Fix empty/loading/error states on the four pages.
+2. Verify translation parity.
+3. Verify prototype and provenance labels.
+4. Verify 1366×768.
+5. Test without internet.
+6. Deploy to Streamlit Community Cloud.
+7. Verify clean startup.
+8. Confirm database and secrets are ignored.
+9. Capture screenshots.
+10. Record backup demo.
+11. Run final automated checks.
+12. Freeze implementation.
+
+Exit condition:
+
+- Public URL works, or local fallback and recording are ready.
+- Complete demo can be performed twice after fresh Demo reset.
+- No critical error remains.
+
+---
+
+## 18. Remaining-Time Budget
+
+Recommended allocation from a 21-hour remaining window:
+
+- Phase 1 checkpoint commit: 15 minutes
+- Wave A: 3 hours
+- Wave B: 3.5 hours
+- Wave C: 4 hours
+- Wave D code hardening: 2 hours
+- Deployment and clean-checkout verification: 1.5 hours
+- Demo video and screenshots: 2 hours
+- Pitch deck and submission materials: 2 hours
+- Rehearsal and final bug buffer: 2.75 hours
+
+Hard rule:
+
+Do not consume submission-material time for secondary product features.
+
+---
+
+## 19. Agent Execution Protocol
+
+The coding agent must operate continuously through the authorized waves.
+
+### Approval behavior
+
+- Do not request approval between every old phase.
+- Do not wait after each file.
+- Do not repeat Phase 0 or Phase 1 verification.
+- Begin the next wave when the current wave exit condition passes.
+- Stop only for:
+  - destructive schema change;
+  - dependency change;
+  - scope change outside this specification;
+  - security risk;
+  - blocker that requires user credentials or deployment access.
+
+### Checkpoint reports
+
+After each wave, report only:
+
+- wave completed;
+- major functionality;
+- tests passed;
+- current blocker;
+- next wave.
+
+Keep intermediate reports concise.
+
+### Testing strategy
+
+During implementation:
+
+- run targeted tests;
+- run Ruff on changed modules;
+- perform focused page smoke checks.
+
+At the end of Waves A, B, and C:
+
+python -m pytest -q
+python -m ruff check .
+python -m ruff format --check .
+
+At final freeze:
+
+python -m pytest -q
+python -m ruff check .
+python -m ruff format --check .
+git diff --check
+git status --short --untracked-files=all
+
+Do not perform repeated clean-environment installations after Python 3.12 has already been verified unless deployment fails.
+
+### Blocker rule
+
+Do not spend more than 20 minutes on one isolated defect.
+
+After 20 minutes:
+
+1. Identify the smallest reliable fallback.
+2. Add or preserve a safe error state.
+3. Document the limitation.
+4. Continue the critical path.
+
+### Code-quality rule
+
+Do not use rapid mode as permission to:
+
+- bypass validation;
+- place SQL in pages;
+- violate optimizer constraints;
+- fake BMKG live status;
+- mutate scenario data;
+- expose raw exceptions;
+- silently skip failing tests;
+- label fallback results optimal.
+
+Rapid execution means reducing process overhead and secondary scope, not reducing correctness of the decision engine.
+
+---
+
+## 20. Critical Acceptance Gate
+
+The submission is technically ready when all items below pass.
+
+### Workspace
+
+- Demo initializes deterministically.
+- Empty initializes without operational records.
+- Reset requires confirmation.
+
+### Data management
+
+- Manual harvest create works.
+- Harvest edit works.
+- Harvest cancel works.
+- Buyer create works.
+- Buyer update/deactivate works.
+- Demand create works.
+- Demand update/close works.
+- Seven-day capacity editing works.
+
+### Risk
+
+- Seeded input produces deterministic score.
+- Factor points sum to final score within tolerance.
+- Thresholds are correct.
+- Missing weather does not fail analysis.
+- Top factors are explained.
+
+### Optimization
+
+- No batch is overallocated.
+- No demand is overfilled.
+- Grade compatibility is respected.
+- Dates are respected.
+- Capacity is respected.
+- Fallback is deterministic and correctly labeled.
+
+### Radar
+
+- Supply, demand, capacity, surplus, and risk appear.
+- Daily chart appears.
+- Critical date appears.
+- Empty and partial-data states work.
+
+### Scenario
+
+- Temporary buyer demand works.
+- Temporary capacity works.
+- Canonical data remains unchanged.
+- Before-and-after metrics appear.
+- Scenario changes the seeded result.
+
+### UX
+
+- Indonesian core path works.
+- English core path works.
+- Four pages load.
+- No raw exception is shown.
+- Data is clearly labeled simulated.
+- Allocation is clearly labeled advisory.
+- Main demo works at 1366×768.
+
+### Submission
+
+- pytest passes.
+- Ruff lint passes.
+- Ruff format check passes.
+- Runtime database is ignored.
+- Secrets are absent.
+- Public deployment works or a verified local fallback exists.
+- Backup recording exists.
+- Complete demo succeeds twice from fresh reset.
+
+---
+
+## 21. Submission Freeze Rules
+
+When fewer than four hours remain:
+
+- Do not add new features.
+- Do not restructure modules.
+- Do not rename files.
+- Do not change the database schema unless the app cannot run.
+- Do not change dependency versions unless deployment cannot install.
+- Fix only critical demo failures.
+- Preserve a working local version.
+- Record the demo before attempting optional polish.
+
+When fewer than two hours remain:
+
+- Freeze source code.
+- Run final checks.
+- Capture screenshots.
+- Verify repository contents.
+- Complete submission forms.
+- Rehearse the pitch.
+- Keep local and prerecorded fallbacks ready.
+
+---
+
+## 22. Definition of Done
+
+MimpiTani is done for the hackathon when:
+
+1. The deterministic Demo workspace loads.
+2. The operator can inspect and modify supply, demand, and capacity.
+3. The Radar exposes a clear seven-day surplus problem.
+4. The risk engine explains why the risk is high.
+5. The optimizer creates a valid allocation plan.
+6. Unallocated supply is visible.
+7. A temporary buyer or capacity scenario improves the result.
+8. The comparison is clear.
+9. Indonesian and English core paths work.
+10. The application starts without uncaught exceptions.
+11. Tests and Ruff checks pass.
+12. Simulated and advisory status is clear.
+13. A deployable or recordable working version exists.
+
+Anything beyond these points is secondary to submitting a stable, understandable, and convincing prototype.

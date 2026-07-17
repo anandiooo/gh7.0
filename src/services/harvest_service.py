@@ -24,6 +24,29 @@ class HarvestService:
         """Return active farmers in stable display order."""
         return self.farmers.list(active=True)
 
+    def create_farmer(
+        self,
+        *,
+        name: str,
+        village_name: str,
+        subdistrict_name: str,
+    ) -> Farmer:
+        """Create an active farmer so an Empty workspace can begin harvest planning."""
+        timestamp = datetime.now(APP_TIMEZONE)
+        try:
+            farmer = Farmer(
+                id=str(uuid4()),
+                name=name,
+                village_name=village_name,
+                subdistrict_name=subdistrict_name,
+                active=True,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        except PydanticValidationError as exc:
+            raise ValidationError("Farmer input validation failed") from exc
+        return self.farmers.create(farmer)
+
     def list_harvests(
         self,
         *,

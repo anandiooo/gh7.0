@@ -3,7 +3,6 @@ import streamlit as st
 from src.config import DB_PATH
 from src.i18n.translator import get_language, set_language, t
 from src.services.workspace_service import WorkspaceSummary
-from src.ui.theme import ACCENT_WARNING_ORANGE, PRIMARY_TEXT
 
 
 def sync_language() -> None:
@@ -33,9 +32,7 @@ def render_header() -> None:
     col_title, col_lang = st.columns([4, 1])
     with col_title:
         st.markdown(
-            '<div class="mt-brand-row">'
-            '<div class="mt-brand-mark">🌶️</div>'
-            "<div>"
+            '<div class="mt-brand-row"><div class="mt-brand-mark">🌶️</div><div>'
             f'<h1 class="mt-brand-title">{t("app.title")}</h1>'
             f'<p class="mt-brand-tagline">{t("app.tagline")}</p>'
             "</div></div>",
@@ -49,22 +46,17 @@ def render_page_intro(*, icon: str, title: str, description: str, eyebrow: str) 
     st.markdown(
         '<div class="mt-page-intro">'
         f'<div class="mt-eyebrow">{eyebrow}</div>'
-        f"<h2>{icon}&nbsp; {title}</h2>"
-        f"<p>{description}</p>"
-        "</div>",
+        f"<h2>{icon}&nbsp; {title}</h2><p>{description}</p></div>",
         unsafe_allow_html=True,
     )
 
 
 def render_prototype_banner() -> None:
     st.markdown(
-        f'<div style="background-color: {ACCENT_WARNING_ORANGE}; '
-        f"border-left: 4px solid {ACCENT_WARNING_ORANGE}; "
-        f"padding: 8px 12px; margin-bottom: 16px; border-radius: 4px; "
-        f'color: {PRIMARY_TEXT};">⚠️ {t("app.data_banner")}'
-        f'<span style="margin-left: 12px; padding: 2px 8px; '
-        f"background-color: {PRIMARY_TEXT}; border-radius: 4px; "
-        f'color: #FAF8EF; font-size: 0.85em;">'
+        '<div style="background:#F7DC27;color:#214916;padding:8px 12px;'
+        'margin-bottom:16px;border-radius:6px;border-left:4px solid #214916">'
+        f'⚠️ {t("app.data_banner")} <span style="margin-left:10px;padding:2px 8px;'
+        'background:#214916;color:#FAF8EF;border-radius:4px;font-size:.85em">'
         f"{t('app.prototype_badge')}</span></div>",
         unsafe_allow_html=True,
     )
@@ -97,17 +89,24 @@ def render_page_placeholder(page_title_key: str) -> None:
     st.info(t("state.coming_soon"))
 
 
-def render_workspace_summary(summary: WorkspaceSummary) -> None:
+def render_workspace_summary(
+    summary: WorkspaceSummary,
+) -> None:
     st.subheader(t("workspace.summary_title"))
     st.caption(
-        f"{t('workspace.mode')}: {summary.profile.workspace_mode.value} · "
-        f"{summary.profile.name} · {summary.profile.pilot_region}"
+        f"{t('workspace.mode')}: "
+        f"{summary.profile.workspace_mode.value} · "
+        f"{summary.profile.name} · "
+        f"{summary.profile.pilot_region}"
     )
     st.caption(f"{t('workspace.commodity')}: {t('workspace.commodity_name')}")
     columns = st.columns(5)
     metrics = (
         ("workspace.farmers", summary.active_farmers),
-        ("workspace.harvest_batches", summary.planned_harvest_batches),
+        (
+            "workspace.harvest_batches",
+            summary.planned_harvest_batches,
+        ),
         ("workspace.buyers", summary.active_buyers),
         ("workspace.demands", summary.open_demands),
         ("workspace.capacity_days", summary.capacity_days),

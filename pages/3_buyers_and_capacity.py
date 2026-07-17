@@ -45,11 +45,20 @@ except MimpiTaniError as error:
     st.stop()
 
 buyer_by_id = {buyer.id: buyer for buyer in buyers}
+
+
+def priority_label(priority: int) -> str:
+    keys = {1: "demand.priority_low", 2: "demand.priority_normal", 3: "demand.priority_high"}
+    return t(keys[priority])
+
+
 buyer_tab, demand_tab, capacity_tab = st.tabs(
     [t("buyers.section"), t("demand.section"), t("capacity.section")]
 )
 
 with buyer_tab:
+    st.subheader(t("buyers.list_title"))
+    st.caption(t("buyers.summary").format(count=sum(buyer.active for buyer in buyers)))
     if buyers:
         st.dataframe(
             [
@@ -149,6 +158,8 @@ with buyer_tab:
                     st.rerun()
 
 with demand_tab:
+    st.subheader(t("demand.section"))
+    st.caption(t("demand.explanation"))
     if demands:
         st.dataframe(
             [
@@ -161,8 +172,8 @@ with demand_tab:
                     t("demand.accepted_grades"): ", ".join(
                         grade.value for grade in demand.accepted_grades
                     ),
-                    t("demand.deadline"): demand.deadline.isoformat(),
-                    t("demand.priority"): demand.priority,
+                    t("demand.deadline"): demand.deadline.strftime("%d %b %Y"),
+                    t("demand.priority"): priority_label(demand.priority),
                     t("common.status"): t(f"demand_status.{demand.status.value.lower()}"),
                 }
                 for demand in demands
@@ -189,7 +200,12 @@ with demand_tab:
             demand_deadline = demand_columns[1].date_input(
                 t("demand.deadline"), value=datetime.now(APP_TIMEZONE).date()
             )
-            demand_priority = demand_columns[2].selectbox(t("demand.priority"), [1, 2, 3], index=2)
+            demand_priority = demand_columns[2].selectbox(
+                t("demand.priority"),
+                [1, 2, 3],
+                index=2,
+                format_func=priority_label,
+            )
             demand_grades = st.multiselect(t("demand.accepted_grades"), list(QualityGrade))
             add_demand = st.form_submit_button(t("demand.add_action"), type="primary")
         if add_demand:
@@ -246,6 +262,7 @@ with demand_tab:
                 [1, 2, 3],
                 index=managed_demand.priority - 1,
                 key="edit_demand_priority",
+                format_func=priority_label,
             )
             demand_edit_grades = st.multiselect(
                 t("demand.accepted_grades"),
@@ -283,6 +300,8 @@ with demand_tab:
                     st.rerun()
 
 with capacity_tab:
+    st.subheader(t("capacity.section"))
+    st.caption(t("capacity.explanation"))
     horizon_start = st.date_input(
         t("capacity.horizon_start"), value=datetime.now(APP_TIMEZONE).date()
     )
@@ -314,16 +333,13 @@ with capacity_tab:
                 note = columns[2].text_input(
                     t("capacity.note"), value=day.note or "", key=f"capacity_note_{day.date}"
                 )
+                if day.missing:
+                    columns[0].caption(t("capacity.missing_status"))
                 capacity_values.append((day.date, quantity, note))
             save_capacity = st.form_submit_button(t("capacity.save_action"), type="primary")
         if save_capacity:
             try:
-                for capacity_date, quantity, note in capacity_values:
-                    capacity_service.upsert_capacity(
-                        capacity_date=capacity_date,
-                        available_capacity_kg=quantity,
-                        note=note,
-                    )
+                capacity_service.upsert_week(capacity_values)
             except MimpiTaniError as error:
                 st.error(user_safe_error_message(error))
             else:

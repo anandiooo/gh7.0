@@ -35,37 +35,21 @@ if not is_workspace_initialized():
 
 
 def render_outcome(outcome: AnalysisOutcome) -> None:
-    metric_columns = st.columns(5)
+    metric_columns = st.columns(4)
     metric_columns[0].metric(t("analysis.risk_score"), f"{outcome.risk.score:.1f}/100")
     metric_columns[1].metric(t("risk.label"), t(f"risk.level.{outcome.risk.level.value.lower()}"))
     metric_columns[2].metric(
         t("analysis.allocated_kg"), f"{outcome.optimization.allocated_kg:,.1f} kg"
     )
     metric_columns[3].metric(
-        t("analysis.unallocated_rate"),
-        f"{outcome.optimization.unallocated_supply_rate:.1%}",
-    )
-    metric_columns[4].metric(
         t("analysis.fulfillment_rate"),
         f"{outcome.optimization.demand_fulfillment_rate:.1%}",
     )
-    st.caption(
-        f"{t('analysis.solver_status')}: "
-        f"{t(f'solver_status.{outcome.optimization.status.value.lower()}')}"
-    )
-    st.markdown(f"### {t('analysis.factor_breakdown')}")
-    st.dataframe(
-        [
-            {
-                t("analysis.factor"): t(f"risk.factor_name.{factor.code.value.lower()}"),
-                t("analysis.raw_factor"): f"{factor.raw_value:.3f}",
-                t("analysis.weight"): f"{factor.weight:.1f}",
-                t("analysis.points"): f"{factor.weighted_points:.2f}",
-            }
-            for factor in outcome.risk.factors
-        ],
-        hide_index=True,
-        width="stretch",
+    st.info(
+        t("analysis.interpretation").format(
+            allocated=outcome.optimization.allocated_kg,
+            unallocated=outcome.optimization.unallocated_kg,
+        )
     )
     harvests = {item.batch_id: item for item in outcome.analysis.harvests}
     demands = {item.demand_id: item for item in outcome.analysis.demands}
@@ -133,6 +117,12 @@ def render_outcome(outcome: AnalysisOutcome) -> None:
 
 def render_scenario_comparison(base: AnalysisOutcome, scenario: ScenarioResult) -> None:
     st.markdown(f"### {t('scenario.comparison_title')}")
+    st.success(
+        t("scenario.improvement_kg").format(
+            quantity=scenario.comparison.allocated_kg_delta,
+            rate=-scenario.comparison.unallocated_supply_rate_delta,
+        )
+    )
     comparison_columns = st.columns(4)
     comparison_columns[0].metric(
         t("analysis.risk_score"),
@@ -236,6 +226,11 @@ except MimpiTaniError as error:
 
 if base is None:
     st.info(t("state.empty.analysis"))
+    link_columns = st.columns(2)
+    if link_columns[0].button(t("radar.open_harvest"), icon="🌾", width="stretch"):
+        st.switch_page("pages/2_harvest_plans.py")
+    if link_columns[1].button(t("radar.open_buyers"), icon="🏢", width="stretch"):
+        st.switch_page("pages/3_buyers_and_capacity.py")
     st.stop()
 
 st.caption(t("analysis.last_run").format(timestamp=base.run.created_at.strftime("%Y-%m-%d %H:%M")))
@@ -350,6 +345,24 @@ if (
     render_scenario_comparison(base, ScenarioResult.model_validate_json(scenario_json))
 
 with st.expander(t("analysis.technical_details")):
+    st.write(
+        f"{t('analysis.solver_status')}: "
+        f"{t(f'solver_status.{base.optimization.status.value.lower()}')}"
+    )
+    st.markdown(f"#### {t('analysis.factor_breakdown')}")
+    st.dataframe(
+        [
+            {
+                t("analysis.factor"): t(f"risk.factor_name.{factor.code.value.lower()}"),
+                t("analysis.raw_factor"): f"{factor.raw_value:.3f}",
+                t("analysis.weight"): f"{factor.weight:.1f}",
+                t("analysis.points"): f"{factor.weighted_points:.2f}",
+            }
+            for factor in base.risk.factors
+        ],
+        hide_index=True,
+        width="stretch",
+    )
     st.code(base.run.id)
     st.write(f"{t('analysis.data_version')}: {base.run.data_version}")
     st.dataframe(

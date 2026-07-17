@@ -145,6 +145,32 @@ def test_seeded_harvest_page_renders_table_forms_and_cancel_confirmation(
     assert at.button(key="cancel_harvest_button").disabled is True
 
 
+def test_empty_workspace_renders_setup_checklist_and_first_farmer_form(tmp_path):
+    database_path = tmp_path / "empty-onboarding.db"
+    reset_workspace(WorkspaceMode.EMPTY, database_path)
+
+    radar = AppTest.from_file("pages/1_surplus_radar.py", default_timeout=10)
+    radar.session_state["workspace_initialized"] = True
+    radar.session_state["database_path"] = str(database_path)
+    radar.run()
+
+    assert not radar.exception
+    assert {button.key for button in radar.button} >= {
+        "setup_step_0",
+        "setup_step_1",
+        "setup_step_2",
+        "setup_step_3",
+    }
+
+    harvest = AppTest.from_file("pages/2_harvest_plans.py", default_timeout=10)
+    harvest.session_state["workspace_initialized"] = True
+    harvest.session_state["database_path"] = str(database_path)
+    harvest.run()
+
+    assert not harvest.exception
+    assert any(button.label == "Simpan Petani" for button in harvest.button)
+
+
 def test_seeded_buyer_capacity_page_renders_crud_and_capacity_controls(tmp_path):
     database_path = tmp_path / "buyer-page.db"
     reset_workspace(WorkspaceMode.DEMO, database_path)
@@ -172,6 +198,6 @@ def test_analysis_page_renders_persisted_result_and_scenario_controls(tmp_path):
 
     assert not at.exception
     labels = {button.label for button in at.button}
-    assert "Jalankan Analisis & Alokasi" in labels
-    assert "Jalankan Skenario Sementara" in labels
+    assert "Jalankan Analisis & Susun Penyaluran" in labels
+    assert "Bandingkan Hasil" in labels
     assert at.dataframe

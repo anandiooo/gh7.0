@@ -20,31 +20,21 @@ class CapacityRepository:
 
     def upsert_by_date(self, capacity: DistributionCapacity) -> DistributionCapacity:
         with self._context.open(write=True) as connection:
-            connection.execute(
-                """
-                INSERT INTO distribution_capacities (
-                    id, date, available_capacity_kg, source, note, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(date) DO UPDATE SET
-                    available_capacity_kg = excluded.available_capacity_kg,
-                    source = excluded.source,
-                    note = excluded.note,
-                    updated_at = excluded.updated_at
-                """,
-                (
-                    capacity.id,
-                    capacity.date.isoformat(),
-                    capacity.available_capacity_kg,
-                    capacity.source.value,
-                    capacity.note,
-                    capacity.created_at.isoformat(),
-                    capacity.updated_at.isoformat(),
-                ),
-            )
+            self._upsert(connection, capacity)
         stored = self.get_by_date(capacity.date)
         if stored is None:
             raise DatabaseError("Capacity upsert completed without a readable record")
         return stored
+
+    def upsert_many(self, capacities: list[DistributionCapacity]) -> list[DistributionCapacity]:
+        """Upsert a capacity set atomically and return the stored records."""
+        with self._context.open(write=True) as connection:
+            for capacity in capacities:
+                self._upsert(connection, capacity)
+        stored = [self.get_by_date(capacity.date) for capacity in capacities]
+        if any(capacity is None for capacity in stored):
+            raise DatabaseError("Capacity bulk upsert completed with an unreadable record")
+        return [capacity for capacity in stored if capacity is not None]
 
     def get_by_date(self, capacity_date: date) -> DistributionCapacity | None:
         with self._context.open() as connection:
@@ -78,6 +68,30 @@ class CapacityRepository:
                 "SELECT COUNT(*) AS count FROM distribution_capacities"
             ).fetchone()
         return int(row["count"])
+
+    @staticmethod
+    def _upsert(connection: sqlite3.Connection, capacity: DistributionCapacity) -> None:
+        connection.execute(
+            """
+            INSERT INTO distribution_capacities (
+                id, date, available_capacity_kg, source, note, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(date) DO UPDATE SET
+                available_capacity_kg = excluded.available_capacity_kg,
+                source = excluded.source,
+                note = excluded.note,
+                updated_at = excluded.updated_at
+            """,
+            (
+                capacity.id,
+                capacity.date.isoformat(),
+                capacity.available_capacity_kg,
+                capacity.source.value,
+                capacity.note,
+                capacity.created_at.isoformat(),
+                capacity.updated_at.isoformat(),
+            ),
+        )
 
 
 __all__ = ["CapacityRepository"]

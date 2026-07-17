@@ -6,7 +6,11 @@ from src.config import DB_PATH
 from src.enums import WorkspaceMode
 from src.errors import MimpiTaniError
 from src.i18n.translator import t
-from src.services.workspace_service import WorkspaceSummary, initialize_workspace, reset_workspace
+from src.services.workspace_service import (
+    WorkspaceSummary,
+    initialize_workspace,
+    reset_workspace,
+)
 from src.ui.components import (
     render_language_switcher,
     render_prototype_banner,
@@ -14,11 +18,7 @@ from src.ui.components import (
 )
 from src.ui.messages import user_safe_error_message
 from src.ui.styles import render_global_styles
-from src.ui.theme import (
-    PRIMARY_DARK_GREEN,
-    PRIMARY_TEXT,
-    SURFACE_BACKGROUND,
-)
+from src.ui.theme import PRIMARY_DARK_GREEN, PRIMARY_TEXT, SURFACE_BACKGROUND
 
 st.set_page_config(
     page_title="MimpiTani",
@@ -77,13 +77,13 @@ def _render_welcome() -> None:
         """,
         unsafe_allow_html=True,
     )
+
     hero_copy, hero_image = st.columns([1.02, 1], gap="large", vertical_alignment="center")
     with hero_copy:
         st.markdown(
             '<div class="mt-hero-copy">'
             f'<div class="mt-eyebrow">{t("welcome.eyebrow")}</div>'
-            f"<h1>{t('app.title')}</h1>"
-            f'<p class="mt-lead">{t("app.tagline")} {t("welcome.description")}</p>'
+            f'<h1>{t("app.title")}</h1><p class="mt-lead">{t("welcome.purpose")}</p>'
             "</div>",
             unsafe_allow_html=True,
         )
@@ -93,13 +93,11 @@ def _render_welcome() -> None:
             unsafe_allow_html=True,
         )
     with hero_image:
-        st.markdown('<div class="mt-hero-image">', unsafe_allow_html=True)
         st.image(
             "assets/mimpitani-hero.webp",
-            width="stretch",
             caption=t("welcome.hero_caption"),
+            width="stretch",
         )
-        st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown(
         f'<div class="mt-section-label">{t("welcome.choose_workspace")}</div>',
@@ -108,13 +106,11 @@ def _render_welcome() -> None:
     col_demo, col_empty = st.columns(2, gap="medium")
     with col_demo:
         st.markdown(
-            f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
-            f"border-radius: 16px; border: 1px solid rgba(169,235,53,.72); "
-            f'box-shadow: 0 12px 30px rgba(33,73,22,.20); min-height: 150px;">'
+            f'<div style="background:{SURFACE_BACKGROUND};padding:1.35rem;border-radius:16px;'
+            'border:1px solid rgba(169,235,53,.72);min-height:145px">'
             f'<span class="mt-pill">{t("welcome.recommended")}</span>'
-            f'<h3 style="color: {PRIMARY_DARK_GREEN};">📦 {t("welcome.load_demo")}</h3>'
-            f'<p style="color: {PRIMARY_TEXT}; font-size: 0.92rem;">'
-            f"{t('welcome.load_demo_desc')}</p></div>",
+            f'<h3 style="color:{PRIMARY_DARK_GREEN}">📦 {t("welcome.load_demo")}</h3>'
+            f'<p style="color:{PRIMARY_TEXT}">{t("welcome.load_demo_desc")}</p></div>',
             unsafe_allow_html=True,
         )
         if st.button(
@@ -125,15 +121,14 @@ def _render_welcome() -> None:
             icon="📦",
         ):
             _run_initialization(WorkspaceMode.DEMO)
+
     with col_empty:
         st.markdown(
-            f'<div style="background: {SURFACE_BACKGROUND}; padding: 1.5rem; '
-            f"border-radius: 16px; border: 1px solid rgba(247,220,39,.72); "
-            f'box-shadow: 0 12px 30px rgba(33,73,22,.20); min-height: 150px;">'
+            f'<div style="background:{SURFACE_BACKGROUND};padding:1.35rem;border-radius:16px;'
+            'border:1px solid rgba(247,220,39,.72);min-height:145px">'
             f'<span class="mt-pill">{t("welcome.blank_canvas")}</span>'
-            f'<h3 style="color: {PRIMARY_DARK_GREEN};">📝 {t("welcome.start_empty")}</h3>'
-            f'<p style="color: {PRIMARY_TEXT}; font-size: 0.92rem;">'
-            f"{t('welcome.start_empty_desc')}</p></div>",
+            f'<h3 style="color:{PRIMARY_DARK_GREEN}">📝 {t("welcome.start_empty")}</h3>'
+            f'<p style="color:{PRIMARY_TEXT}">{t("welcome.start_empty_desc")}</p></div>',
             unsafe_allow_html=True,
         )
         if st.button(
@@ -143,6 +138,7 @@ def _render_welcome() -> None:
             icon="📝",
         ):
             _run_initialization(WorkspaceMode.EMPTY)
+
     st.divider()
     footer_copy, footer_lang = st.columns([4, 1])
     footer_copy.caption(t("welcome.disclaimer"))
@@ -153,7 +149,10 @@ def _render_welcome() -> None:
 def _render_reset_control() -> None:
     with st.sidebar.expander(t("workspace.reset_title")):
         st.caption(t("workspace.reset_description"))
-        confirmed = st.checkbox(t("workspace.reset_confirmation"), key="confirm_workspace_reset")
+        confirmed = st.checkbox(
+            t("workspace.reset_confirmation"),
+            key="confirm_workspace_reset",
+        )
         if st.button(
             t("workspace.reset_action"),
             key="btn_reset_workspace",
@@ -166,8 +165,16 @@ def _render_reset_control() -> None:
 
 def _workspace_pages() -> list[st.Page]:
     return [
-        st.Page("pages/1_surplus_radar.py", title=t("nav.radar"), icon="🌶️"),
-        st.Page("pages/2_harvest_plans.py", title=t("nav.harvest_plans"), icon="🌾"),
+        st.Page(
+            "pages/1_surplus_radar.py",
+            title=t("nav.radar"),
+            icon="🌶️",
+        ),
+        st.Page(
+            "pages/2_harvest_plans.py",
+            title=t("nav.harvest_plans"),
+            icon="🌾",
+        ),
         st.Page(
             "pages/3_buyers_and_capacity.py",
             title=t("nav.buyers_capacity"),

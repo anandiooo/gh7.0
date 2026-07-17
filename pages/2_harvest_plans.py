@@ -28,9 +28,10 @@ render_prototype_banner()
 render_page_intro(
     icon="🌾",
     title=t("nav.harvest_plans"),
-    description=t("harvest.source_label"),
+    description=t("harvest.purpose"),
     eyebrow=t("harvest.eyebrow"),
 )
+st.caption(t("harvest.source_label"))
 if notice := st.session_state.pop("harvest_notice", None):
     st.success(t(notice), icon="✅")
 
@@ -43,7 +44,20 @@ except MimpiTaniError as error:
     st.stop()
 
 farmer_names = {farmer.id: farmer.name for farmer in farmers}
+farmer_villages = {farmer.id: farmer.village_name for farmer in farmers}
 with st.expander(t("harvest.filters")):
+    if st.button(t("harvest.reset_filters"), key="harvest_reset_filters"):
+        for key in (
+            "harvest_filter_farmer",
+            "harvest_filter_grade",
+            "harvest_filter_confidence",
+            "harvest_filter_status",
+            "harvest_filter_dates_enabled",
+            "harvest_start_date",
+            "harvest_end_date",
+        ):
+            st.session_state.pop(key, None)
+        st.rerun()
     filter_columns = st.columns(4)
     selected_farmer = filter_columns[0].selectbox(
         t("common.farmer"),
@@ -88,13 +102,17 @@ filtered = service.list_harvests(
     confidence=selected_confidence,
     status=selected_status,
 )
-st.metric(t("harvest.planned_quantity"), f"{service.planned_quantity_summary(filtered):,.1f} kg")
+planned_quantity = service.planned_quantity_summary(filtered)
+st.markdown(
+    f"### {t('harvest.summary').format(count=len(filtered), quantity=f'{planned_quantity:,.1f}')}"
+)
 if filtered:
     st.dataframe(
         [
             {
                 t("common.farmer"): farmer_names.get(batch.farmer_id, batch.farmer_id),
-                t("common.date"): batch.estimated_harvest_date.isoformat(),
+                t("harvest.village_name"): farmer_villages.get(batch.farmer_id, "—"),
+                t("common.date"): batch.estimated_harvest_date.strftime("%d %b %Y"),
                 t("common.quantity"): f"{batch.estimated_quantity_kg:,.1f} kg",
                 t("common.grade"): batch.grade.value,
                 t("harvest.confidence"): t(f"confidence.{batch.confidence.value.lower()}"),
@@ -112,6 +130,25 @@ st.divider()
 st.markdown(f"### {t('harvest.add_title')}")
 if not farmers:
     st.warning(t("harvest.no_active_farmers"))
+    with st.form("add_first_farmer_form"):
+        st.markdown(f"#### {t('harvest.add_farmer_title')}")
+        farmer_name = st.text_input(t("harvest.farmer_name"))
+        farmer_columns = st.columns(2)
+        village_name = farmer_columns[0].text_input(t("harvest.village_name"))
+        subdistrict_name = farmer_columns[1].text_input(t("harvest.subdistrict_name"))
+        add_farmer = st.form_submit_button(t("harvest.add_farmer_action"), type="primary")
+    if add_farmer:
+        try:
+            service.create_farmer(
+                name=farmer_name,
+                village_name=village_name,
+                subdistrict_name=subdistrict_name,
+            )
+        except MimpiTaniError as error:
+            st.error(user_safe_error_message(error))
+        else:
+            st.session_state["harvest_notice"] = "harvest.farmer_created"
+            st.rerun()
 else:
     with st.form("add_harvest_form"):
         add_farmer = st.selectbox(

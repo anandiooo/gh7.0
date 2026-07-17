@@ -47,12 +47,31 @@ class CapacityService:
         self, *, capacity_date: date, available_capacity_kg: float, note: str | None = None
     ) -> DistributionCapacity:
         """Validate and upsert one manual daily capacity record."""
+        capacity = self._build_capacity(capacity_date, available_capacity_kg, note)
+        return self.capacities.upsert_by_date(capacity)
+
+    def upsert_week(
+        self, values: list[tuple[date, float, str | None]]
+    ) -> list[DistributionCapacity]:
+        """Validate and save a set of daily capacities in one transaction."""
+        dates = [capacity_date for capacity_date, _, _ in values]
+        if not values or len(set(dates)) != len(dates):
+            raise ValidationError("Capacity dates must be present and unique")
+        capacities = [
+            self._build_capacity(capacity_date, quantity, note)
+            for capacity_date, quantity, note in values
+        ]
+        return self.capacities.upsert_many(capacities)
+
+    def _build_capacity(
+        self, capacity_date: date, available_capacity_kg: float, note: str | None
+    ) -> DistributionCapacity:
         existing = self.capacities.get_by_date(capacity_date)
         timestamp = (
             mutation_timestamp(existing.created_at) if existing else datetime.now(APP_TIMEZONE)
         )
         try:
-            capacity = DistributionCapacity(
+            return DistributionCapacity(
                 id=existing.id if existing else str(uuid4()),
                 date=capacity_date,
                 available_capacity_kg=available_capacity_kg,
@@ -63,7 +82,6 @@ class CapacityService:
             )
         except PydanticValidationError as exc:
             raise ValidationError("Capacity input validation failed") from exc
-        return self.capacities.upsert_by_date(capacity)
 
 
 __all__ = ["CapacityDay", "CapacityService"]
