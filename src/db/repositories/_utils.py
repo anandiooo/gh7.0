@@ -5,7 +5,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 
 from src.db.connection import DatabasePath, connection_context, transaction
-from src.errors import ConflictError, DatabaseError, MimpiTaniError
+from src.errors import ConflictError, DatabaseError, TetaniError
 
 
 class RepositoryContext:
@@ -34,7 +34,7 @@ class RepositoryContext:
                         yield connection
                 else:
                     yield connection
-        except MimpiTaniError:
+        except TetaniError:
             raise
         except sqlite3.IntegrityError as exc:
             raise ConflictError(

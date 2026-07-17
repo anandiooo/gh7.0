@@ -1,6 +1,6 @@
-# MimpiTani
+# tetani
 
-MimpiTani is a bilingual early-warning and decision-support prototype for a chili farmer
+tetani is a bilingual early-warning and decision-support prototype for a chili farmer
 cooperative. It combines seven-day harvest plans, compatible buyer demand, distribution
 capacity, deterministic surplus risk, advisory allocation, and temporary scenarios.
 
@@ -29,7 +29,7 @@ To start the Streamlit interface:
 streamlit run app.py
 ```
 
-The application creates `data/mimpitani.db` only after the operator explicitly selects
+The application creates `data/tetani.db` only after the operator explicitly selects
 Demo or Empty workspace initialization.
 
 To initialize or deterministically reset the default database in Demo mode without

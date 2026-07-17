@@ -62,11 +62,11 @@ class TestTranslationValues:
 class TestTranslatorFunction:
     def test_indonesian_product_title(self) -> None:
         set_language("id")
-        assert t("app.title") == "MimpiTani"
+        assert t("app.title") == "tetani"
 
     def test_english_product_title(self) -> None:
         set_language("en")
-        assert t("app.title") == "MimpiTani (Farmers' Dream)"
+        assert t("app.title") == "tetani (Farmers' Dream)"
 
     def test_language_switch_changes_output(self) -> None:
         set_language("id")

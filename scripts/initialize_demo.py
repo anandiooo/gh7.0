@@ -9,13 +9,13 @@ if str(PROJECT_ROOT) not in sys.path:
 def main() -> int:
     from src.config import DB_PATH
     from src.enums import WorkspaceMode
-    from src.errors import MimpiTaniError
+    from src.errors import TetaniError
     from src.services.workspace_service import initialize_workspace, read_workspace_counts
 
     try:
         initialize_workspace(WorkspaceMode.DEMO, DB_PATH)
         counts = read_workspace_counts(DB_PATH)
-    except MimpiTaniError as error:
+    except TetaniError as error:
         print(f"Demo initialization failed: {error}", file=sys.stderr)
         return 1
     except Exception:

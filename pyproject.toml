@@ -1,5 +1,5 @@
 [project]
-name = "mimpitani"
+name = "tetani"
 version = "0.1.0"
 description = "Early-warning and decision-support system for chili farmer cooperatives"
 requires-python = ">=3.12"

@@ -1,4 +1,4 @@
-# Universal Coding Agent Rules — MimpiTani
+# Universal Coding Agent Rules — tetani
 
 Read this before touching any code. Refer to `SPEC.md` for what to build; this file defines how to build it. This file is named `CLAUDE.md` for compatibility, but its rules apply equally to Claude Code, Codex, Cursor, Windsurf, Cline, Aider, and other coding agents.
 
@@ -30,7 +30,7 @@ Do not introduce FastAPI, Flask, Django, React, Next.js, Supabase, PostgreSQL, F
 
 ## Product Boundaries
 
-MimpiTani is a bilingual, single-operator, one-cooperative, one-commodity decision-support prototype.
+tetani is a bilingual, single-operator, one-cooperative, one-commodity decision-support prototype.
 
 The product must remain centered on:
 
@@ -54,7 +54,7 @@ The system is advisory. Never present recommendations as executed transactions, 
 Use this structure unless a concrete technical issue requires a proposed change:
 
 ```text
-mimpitani/
+tetani/
 ├── app.py
 ├── SPEC.md
 ├── CLAUDE.md
@@ -194,7 +194,7 @@ Use precise domain names. Prefer `estimated_quantity_kg` over `amount`, `BuyerDe
 - Default language is `id`.
 - Language switcher is `ID | EN`.
 - Language preference is stored only for the active session.
-- Product name is `MimpiTani` in Indonesian and `MimpiTani (Farmers' Dream)` in English.
+- Product name is `tetani` in Indonesian and `tetani (Farmers' Dream)` in English.
 - All user-facing text must use `t("translation.key")`.
 - `src/i18n/id.json` and `src/i18n/en.json` must contain identical keys.
 - A missing translation key is a test failure; do not silently display the raw key.

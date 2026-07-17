@@ -1,10 +1,10 @@
-# MimpiTani — SPEC.md
+# tetani — SPEC.md
 
 # Rapid Hackathon Execution Edition
 
 ## 1. Status and Deadline
 
-MimpiTani is being developed for a time-limited hackathon submission.
+tetani is being developed for a time-limited hackathon submission.
 
 Current implementation status:
 
@@ -29,8 +29,8 @@ The priority is a reliable end-to-end judging demonstration, not exhaustive prod
 
 ### Product names
 
-- Indonesian: MimpiTani
-- English: MimpiTani (Farmers' Dream)
+- Indonesian: tetani
+- English: tetani (Farmers' Dream)
 
 ### Taglines
 
@@ -48,7 +48,7 @@ Early-warning and decision-support system for agricultural cooperatives.
 
 ### One-liner
 
-MimpiTani helps an agricultural cooperative detect likely chili-harvest surpluses within the next seven days and generate an explainable allocation plan before produce becomes unabsorbed, loses value, or is wasted.
+tetani helps an agricultural cooperative detect likely chili-harvest surpluses within the next seven days and generate an explainable allocation plan before produce becomes unabsorbed, loses value, or is wasted.
 
 ### Demo organization
 
@@ -81,7 +81,7 @@ The complete demo must answer these questions clearly:
 
 ### Required end-to-end demo
 
-1. Open MimpiTani.
+1. Open tetani.
 2. Choose Demo workspace.
 3. Show deterministic cooperative data.
 4. Open Radar Surplus.
@@ -1248,7 +1248,7 @@ When fewer than two hours remain:
 
 ## 22. Definition of Done
 
-MimpiTani is done for the hackathon when:
+tetani is done for the hackathon when:
 
 1. The deterministic Demo workspace loads.
 2. The operator can inspect and modify supply, demand, and capacity.

@@ -1,1 +1,1 @@
-# MimpiTani — i18n package
+# tetani — i18n package

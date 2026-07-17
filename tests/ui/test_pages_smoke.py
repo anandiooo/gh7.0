@@ -8,6 +8,41 @@ from src.errors import DatabaseError
 from src.services.analysis_service import AnalysisService
 from src.services.seed_service import EXPECTED_DEMO_COUNTS, EXPECTED_EMPTY_COUNTS
 from src.services.workspace_service import read_workspace_counts, reset_workspace
+from src.ui.components import material_icon
+
+
+def test_user_facing_ui_source_contains_no_emoji():
+    ui_paths = [
+        Path("app.py"),
+        *Path("pages").glob("*.py"),
+        *Path("src/ui").glob("*.py"),
+        *Path("src/i18n").glob("*.json"),
+    ]
+    emoji_ranges = (
+        (0x2300, 0x23FF),
+        (0x2600, 0x27BF),
+        (0x1F000, 0x1FAFF),
+        (0xFE00, 0xFE0F),
+    )
+    offenders = {
+        str(path): sorted(
+            {
+                character
+                for character in path.read_text(encoding="utf-8")
+                if any(start <= ord(character) <= end for start, end in emoji_ranges)
+            }
+        )
+        for path in ui_paths
+    }
+
+    assert not {path: chars for path, chars in offenders.items() if chars}
+
+
+def test_custom_material_icons_use_streamlit_ligature_class():
+    icon = material_icon("inventory_2")
+
+    assert 'class="stIconMaterial mt-material-icon"' in icon
+    assert ">inventory_2</span>" in icon
 
 
 def test_app_renders_welcome_without_exception():
@@ -20,7 +55,7 @@ def test_welcome_screen_elements():
 
     # Product identity
     md_texts = [m.value for m in at.markdown]
-    assert any("MimpiTani" in text for text in md_texts), "Product identity missing"
+    assert any("tetani" in text for text in md_texts), "Product identity missing"
 
     # Demo and Empty actions present
     button_keys = [b.key for b in at.button]
@@ -32,8 +67,7 @@ def test_welcome_screen_elements():
     assert at.radio[0].value == "id", "Default language should be ID"
 
     # Disclaimer present
-    captions = [c.value for c in at.caption]
-    assert any("prototype" in text.lower() for text in captions), "Disclaimer missing"
+    assert any("prototype" in text.lower() for text in md_texts), "Disclaimer missing"
 
 
 def test_page_modules_load():
@@ -80,7 +114,11 @@ def test_demo_button_initializes_temporary_database_and_session_metadata(tmp_pat
     )
     assert read_workspace_counts(database_path) == EXPECTED_DEMO_COUNTS
     assert any("initialized successfully" in message.value for message in at.success)
-    assert {metric.value for metric in at.metric} >= {"30", "42", "8", "16", "7"}
+    captions = {caption.value for caption in at.caption}
+    assert any("**42**" in caption for caption in captions)
+    assert any("**8**" in caption for caption in captions)
+    assert any("**16**" in caption for caption in captions)
+    assert any("**7**" in caption for caption in captions)
 
 
 def test_empty_button_initializes_profile_only_temporary_database(tmp_path):
@@ -94,7 +132,7 @@ def test_empty_button_initializes_profile_only_temporary_database(tmp_path):
     assert at.session_state["workspace_mode"] == "EMPTY"
     assert read_workspace_counts(database_path) == EXPECTED_EMPTY_COUNTS
     assert any("Empty workspace initialized" in message.value for message in at.success)
-    assert {metric.value for metric in at.metric} == {"0"}
+    assert any("**0**" in caption.value for caption in at.caption)
 
 
 def test_english_demo_initialization_and_confirmed_reset_are_bilingual(tmp_path):

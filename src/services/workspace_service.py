@@ -18,7 +18,7 @@ from src.db.repositories import (
 )
 from src.db.schema import initialize_schema
 from src.enums import BatchStatus, DemandStatus, WorkspaceMode
-from src.errors import MimpiTaniError, SystemError, ValidationError, WorkspaceNotInitializedError
+from src.errors import TetaniError, SystemError, ValidationError, WorkspaceNotInitializedError
 from src.models import CooperativeProfile
 from src.services.data_version_service import compute_data_version
 from src.services.seed_service import SeedCounts, SeedService
@@ -76,7 +76,7 @@ def reset_workspace(
                 seed_service.seed_demo(selected_date)
             else:
                 seed_service.seed_empty(selected_date)
-    except MimpiTaniError:
+    except TetaniError:
         raise
     except PydanticValidationError as exc:
         raise ValidationError("Workspace seed validation failed") from exc

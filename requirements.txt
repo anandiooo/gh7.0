@@ -1,4 +1,4 @@
-# MimpiTani — pinned runtime and dev dependencies
+# tetani — pinned runtime and dev dependencies
 # Runtime
 streamlit==1.58.0
 pydantic==2.13.2

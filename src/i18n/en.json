@@ -1,6 +1,7 @@
 {
   "app": {
-    "title": "MimpiTani (Farmers' Dream)",
+    "title": "tetani (Farmers' Dream)",
+    "language": "Language",
     "tagline": "Detect surplus early. Protect every harvest.",
     "prototype_badge": "Prototype",
     "data_banner": "Harvest, buyer, and capacity data in this prototype are simulated."
@@ -12,10 +13,10 @@
     "analysis_simulation": "Analysis & Simulation"
   },
   "welcome": {
-    "heading": "Welcome to MimpiTani",
+    "heading": "Welcome to tetani",
     "eyebrow": "Cooperative intelligence for perishable harvests",
     "description": "Early-warning and decision-support system for chili farmer cooperatives.",
-    "purpose": "MimpiTani helps cooperatives spot harvest surplus risk seven days early and prepare a distribution plan.",
+    "purpose": "tetani helps cooperatives spot harvest surplus risk seven days early and prepare a distribution plan.",
     "local_first": "Local-first · deterministic · advisory",
     "hero_caption": "Simulated red bird's-eye chili pilot landscape in Kabupaten Magelang.",
     "choose_workspace": "Choose how you want to begin",
@@ -49,7 +50,7 @@
   "state": {
     "workspace_required": "Please initialize a workspace first.",
     "empty": {
-      "radar": "No harvest plans yet. Complete the setup steps so MimpiTani can calculate seven-day surplus risk.",
+      "radar": "No harvest plans yet. Complete the setup steps so tetani can calculate seven-day surplus risk.",
       "harvest": "No harvest plans yet. Use the form below to add your first harvest plan.",
       "buyers": "No buyers yet. Add a buyer to enable allocation.",
       "capacity": "No distribution capacity set. Configure daily capacity to enable optimization.",

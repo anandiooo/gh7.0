@@ -1,6 +1,7 @@
 {
   "app": {
-    "title": "MimpiTani",
+    "title": "tetani",
+    "language": "Bahasa",
     "tagline": "Antisipasi surplus, selamatkan hasil panen.",
     "prototype_badge": "Prototype",
     "data_banner": "Data panen, buyer, dan kapasitas pada prototype ini adalah simulasi."
@@ -12,10 +13,10 @@
     "analysis_simulation": "Analisis & Simulasi"
   },
   "welcome": {
-    "heading": "Selamat Datang di MimpiTani",
+    "heading": "Selamat Datang di tetani",
     "eyebrow": "Inteligensi koperasi untuk panen komoditas segar",
     "description": "Sistem peringatan dini dan pendukung keputusan untuk koperasi petani cabai.",
-    "purpose": "MimpiTani membantu koperasi melihat risiko kelebihan panen tujuh hari lebih awal dan menyusun rencana penyaluran.",
+    "purpose": "tetani membantu koperasi melihat risiko kelebihan panen tujuh hari lebih awal dan menyusun rencana penyaluran.",
     "local_first": "Lokal · deterministik · advisory",
     "hero_caption": "Ilustrasi lanskap pilot cabai rawit merah di Kabupaten Magelang.",
     "choose_workspace": "Pilih cara memulai",
@@ -49,7 +50,7 @@
   "state": {
     "workspace_required": "Silakan inisialisasi workspace terlebih dahulu.",
     "empty": {
-      "radar": "Belum ada rencana panen. Lengkapi langkah penyiapan agar MimpiTani dapat menghitung risiko surplus tujuh hari ke depan.",
+      "radar": "Belum ada rencana panen. Lengkapi langkah penyiapan agar tetani dapat menghitung risiko surplus tujuh hari ke depan.",
       "harvest": "Belum ada rencana panen. Gunakan form di bawah untuk menambah rencana panen pertama.",
       "buyers": "Belum ada buyer. Tambah buyer untuk memulai alokasi.",
       "capacity": "Belum ada kapasitas distribusi. Atur kapasitas harian untuk mengaktifkan optimasi.",

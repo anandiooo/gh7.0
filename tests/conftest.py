@@ -19,6 +19,6 @@ def aware_timestamp(reference_date: date) -> datetime:
 
 @pytest.fixture
 def database_path(tmp_path: Path) -> Path:
-    path = tmp_path / "mimpitani-test.db"
+    path = tmp_path / "tetani-test.db"
     initialize_schema(path)
     return path
